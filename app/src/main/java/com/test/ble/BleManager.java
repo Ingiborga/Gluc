@@ -28,11 +28,11 @@ public class BleManager {
 
     private Context context;
     private BluetoothGatt bluetoothGatt;
-    private Queue<Runnable> commandQueue;
-    private boolean isCommandRunning;
+    private Queue<Runnable> commandQueue;//Очередь команд
+    private boolean isCommandRunning;// Флаг выполнения команды
     private int retryCount;
-    private Handler bleHandler;
-    private Handler timeoutHandler;
+    private Handler bleHandler;// Обработчик для команд
+    private Handler timeoutHandler;// Обработчик таймаутов
 
     private String deviceAddress;
     private BleManagerListener listener;
