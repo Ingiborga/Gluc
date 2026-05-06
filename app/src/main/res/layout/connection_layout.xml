@@ -37,8 +37,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Status: Not started"
-        android:gravity="center"
-        />
+        android:gravity="center" />
+
     <TextView
         android:id="@+id/deviceListText"
         android:layout_width="match_parent"
@@ -47,6 +47,7 @@
         android:layout_marginBottom="32dp"
         android:gravity="center"
         android:text="Searching" />
+
     <Button
         android:id="@+id/startServiceButton"
         android:layout_width="match_parent"
@@ -59,7 +60,5 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Stop Monitoring"/>
-
-
 
 </LinearLayout>
