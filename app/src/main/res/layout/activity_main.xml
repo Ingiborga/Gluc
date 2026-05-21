@@ -1,29 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/nav_host_fragment"
-        android:name="androidx.navigation.fragment.NavHostFragment"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:defaultNavHost="true"
-        app:navGraph="@navigation/nav_graph"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/bottomNav"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bottomNav"
-        android:layout_width="0dp"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:gravity="center">
+    <TextView
+        android:id="@+id/glucoseValueText"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:menu="@menu/bottom_nav_menu"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        android:text="--.-"
+        android:textSize="64sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="10dp"/>
+    <TextView
+        android:id="@+id/glucoseMgdlText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="--- mg/dL"
+        android:textSize="16sp"
+        android:textColor="#666666"
+        android:layout_marginBottom="20dp"/>
+    <TextView
+        android:id="@+id/timestampText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Last update: --:--:--"
+        android:textSize="14sp"
+        android:textColor="#999999"
+        android:layout_marginBottom="10dp"/>
+    <TextView
+        android:id="@+id/statusText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Status: Waiting for data..."
+        android:textSize="14sp"/>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

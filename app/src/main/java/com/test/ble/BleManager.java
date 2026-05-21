@@ -20,7 +20,7 @@ import java.util.UUID;
 public class BleManager {
     private static final String TAG = "BleManager";
     private static final int MAX_RETRIES = 3;
-    private static final int CONNECTION_TIMEOUT_MS = 30000;
+    private static final int CONNECTION_TIMEOUT_MS = 60000;
 
     // UUID для Client Characteristic Configuration Descriptor
     private static final UUID CCC_DESCRIPTOR_UUID =
@@ -43,15 +43,33 @@ public class BleManager {
     public interface BleManagerListener {
         void onConnected();
         void onDisconnected();
+        void onServicesDiscovered() throws InterruptedException;
         void onConnectionFailed(String error);
         void onDataReceived(byte[] data, BluetoothGattCharacteristic characteristic);
         void onBondingRequired();
         void onBondingComplete();
     }
-
+    public BluetoothDevice getBluetoothDevice() {
+        if (bluetoothGatt != null) {
+            return bluetoothGatt.getDevice();
+        }
+        return null;
+    }
+    public String getDeviceName() {
+        if (bluetoothGatt != null) {
+            try {
+                return bluetoothGatt.getDevice().getName();
+            } catch (SecurityException e) {
+                Log.e(TAG, "Cannot get device name - permission missing", e);
+                return "Unknown";
+            }
+        }
+        return "Not connected";
+    }
     public BleManager(Context context, BleManagerListener listener) {
         this.context = context;
         this.listener = listener;
+
         this.commandQueue = new LinkedList<>();
         this.isCommandRunning = false;
         this.bleHandler = new Handler(Looper.getMainLooper());
@@ -63,12 +81,9 @@ public class BleManager {
         @Override
         public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
             timeoutHandler.removeCallbacks(connectionTimeoutRunnable);
-
-            if (status == BluetoothGatt.GATT_SUCCESS) {
-                if (newState == BluetoothProfile.STATE_CONNECTED) {
+            if (newState == BluetoothProfile.STATE_CONNECTED) {
                     Log.d(TAG, "Connected to device: " + deviceAddress);
                     isConnecting = false;
-
                     // Проверяем состояние bonding (статья #4)
                     int bondState = BluetoothDevice.BOND_NONE;
                     try {
@@ -76,7 +91,6 @@ public class BleManager {
                     } catch (SecurityException e) {
                         Log.e(TAG, "Cannot get bond state - permission missing", e);
                     }
-
                     if (bondState == BluetoothDevice.BOND_BONDING) {
                         Log.d(TAG, "Bonding in progress, waiting...");
                         if (listener != null) {
@@ -84,13 +98,8 @@ public class BleManager {
                         }
                         return;
                     }
-
                     // Небольшая задержка для Android 7 и ниже (статья #2)
-                    int delay = 0;
-                    if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.N_MR1) {
-                        delay = 1000;
-                    }
-
+                    int delay = 2000;
                     bleHandler.postDelayed(() -> {
                         if (bluetoothGatt != null) {
                             Log.d(TAG, "Discovering services...");
@@ -101,13 +110,11 @@ public class BleManager {
                             }
                         }
                     }, delay);
-
                 } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
                     Log.d(TAG, "Disconnected from device");
                     isDisconnecting = false;
                     isConnecting = false;
                     clearCommandQueue();
-
                     if (bluetoothGatt != null) {
                         try {
                             bluetoothGatt.close();
@@ -117,40 +124,16 @@ public class BleManager {
                         }
                         bluetoothGatt = null;
                     }
-
                     if (listener != null) {
                         listener.onDisconnected();
                     }
                 }
-            } else {
-                // Ошибка подключения/отключения (часто status = 133)
-                Log.e(TAG, "Connection state change error, status: " + status);
-                isConnecting = false;
-                isDisconnecting = false;
-
-                if (bluetoothGatt != null) {
-                    try {
-                        bluetoothGatt.close();
-                        Log.d(TAG, "Gatt closed successfully");
-                    } catch (SecurityException e) {
-                        Log.e(TAG, "Security exception while closing Gatt", e);
-                    }
-                    bluetoothGatt = null;
-                }
-
-                clearCommandQueue();
-
-                if (listener != null) {
-                    listener.onConnectionFailed("Connection error: " + status);
-                }
-            }
         }
 
         @Override
         public void onServicesDiscovered(BluetoothGatt gatt, int status) {
             if (status == BluetoothGatt.GATT_SUCCESS) {
                 Log.d(TAG, "Services discovered. Total services: " + gatt.getServices().size());
-
                 // Выводим все сервисы для отладки
                 for (BluetoothGattService service : gatt.getServices()) {
                     Log.d(TAG, "Service: " + service.getUuid());
@@ -159,11 +142,14 @@ public class BleManager {
                                 ", Properties: " + characteristic.getProperties());
                     }
                 }
-
                 if (listener != null) {
                     listener.onConnected();
+                    try {
+                        listener.onServicesDiscovered();
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
                 }
-
                 // Запускаем следующую команду из очереди
                 nextCommand();
             } else {
@@ -181,8 +167,16 @@ public class BleManager {
                 Log.d(TAG, "Characteristic read: " + characteristic.getUuid() +
                         ", data length: " + (data != null ? data.length : 0));
 
-                if (listener != null && data != null) {
-                    listener.onDataReceived(data, characteristic);
+                if (status == BluetoothGatt.GATT_SUCCESS) {
+                    // ✅ УСПЕШНОЕ ЧТЕНИЕ — отдаем данные
+                    if (listener != null && data != null) {
+                        listener.onDataReceived(data, characteristic);  // ← ДЛЯ ДАННЫХ
+                    }
+                } else if (status == BluetoothGatt.GATT_INSUFFICIENT_AUTHENTICATION) {
+                    // ❌ НЕДОСТАТОЧНО ПРАВ — требуется bonding
+                    if (listener != null) {
+                        listener.onBondingRequired();  // ← ДЛЯ BONDING (ЭТО ПРАВИЛЬНО!)
+                    }
                 }
             } else if (status == BluetoothGatt.GATT_INSUFFICIENT_AUTHENTICATION) {
                 // Требуется bonding (статья #4)
@@ -213,6 +207,9 @@ public class BleManager {
         @Override
         public void onCharacteristicChanged(BluetoothGatt gatt,
                                             BluetoothGattCharacteristic characteristic) {
+            Log.e(TAG, "🔥🔥🔥 NOTIFICATION RECEIVED! 🔥🔥🔥");
+            Log.d(TAG, "Characteristic changed got (notification): " + characteristic.getUuid() +
+                    ", data length: ");
             // Важно: создаем копию данных, так как объект переиспользуется (статья #3)
             byte[] originalData = characteristic.getValue();
             if (originalData != null) {
@@ -263,15 +260,12 @@ public class BleManager {
             Log.e(TAG, "Device is null");
             return;
         }
-
         if (isConnecting || isDisconnecting) {
             Log.w(TAG, "Already connecting/disconnecting");
             return;
         }
-
         deviceAddress = device.getAddress();
         isConnecting = true;
-
         // Важно: используем TRANSPORT_LE (статья #2)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             try {
@@ -281,7 +275,6 @@ public class BleManager {
             } catch (SecurityException e) {
                 Log.e(TAG, "Security exception while connection Gatt", e);
             }
-
         } else {
             try {
                 bluetoothGatt = device.connectGatt(context, false, gattCallback);
@@ -290,7 +283,6 @@ public class BleManager {
                 Log.e(TAG, "Security exception while connection Gatt", e);
             }
         }
-
         // Устанавливаем таймаут подключения
         timeoutHandler.postDelayed(connectionTimeoutRunnable, CONNECTION_TIMEOUT_MS);
     }
@@ -442,16 +434,22 @@ public class BleManager {
         byte[] value;
         int properties = characteristic.getProperties();
         if ((properties & BluetoothGattCharacteristic.PROPERTY_NOTIFY) != 0) {
-            value = enable ? BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE :
-                    BluetoothGattDescriptor.DISABLE_NOTIFICATION_VALUE;
+            // ✅ ИСПРАВЛЕНО: для некоторых датчиков нужно 0x01, 0x00
+            if (enable) {
+                value = new byte[]{0x01, 0x00};  // включить уведомления
+            } else {
+                value = new byte[]{0x00, 0x00};  // выключить
+            }
         } else if ((properties & BluetoothGattCharacteristic.PROPERTY_INDICATE) != 0) {
-            value = enable ? BluetoothGattDescriptor.ENABLE_INDICATION_VALUE :
-                    BluetoothGattDescriptor.DISABLE_NOTIFICATION_VALUE;
+            if (enable) {
+                value = new byte[]{0x02, 0x00};  // для индикаций
+            } else {
+                value = new byte[]{0x00, 0x00};
+            }
         } else {
             Log.e(TAG, "Characteristic does not support NOTIFY or INDICATE");
             return false;
         }
-
         final byte[] finalValue = value;
 
         enqueueCommand(() -> {
@@ -527,6 +525,20 @@ public class BleManager {
         }
         return service.getCharacteristic(characteristicUuid);
     }
+    public void createBond() {
+        if (bluetoothGatt != null) {
+            try {
+                BluetoothDevice device = bluetoothGatt.getDevice();
+                Log.d(TAG, "Creating bond with device: " + device.getAddress());
+
+                // Метод createBond() доступен через рефлексию или напрямую (API 19+)
+                boolean result = device.createBond();
+                Log.d(TAG, "createBond() returned: " + result);
+            } catch (SecurityException e) {
+                Log.e(TAG, "Security exception while creating bond", e);
+            }
+        }
+    }
 
     // Очередь команд (статья #3)
     private void enqueueCommand(Runnable command) {
@@ -576,5 +588,21 @@ public class BleManager {
 
     public String getDeviceAddress() {
         return deviceAddress;
+    }
+    public void resetConnectionState() {
+        Log.d(TAG, "Resetting connection state");
+        isConnecting = false;
+        isDisconnecting = false;
+        clearCommandQueue();
+
+        if (bluetoothGatt != null) {
+            try {
+                bluetoothGatt.close();
+                Log.d(TAG, "Gatt closed during reset");
+            } catch (SecurityException e) {
+                Log.e(TAG, "Security exception while closing Gatt during reset", e);
+            }
+            bluetoothGatt = null;
+        }
     }
 }

@@ -6,6 +6,7 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.le.BluetoothLeScanner;
 import android.bluetooth.le.ScanCallback;
 import android.bluetooth.le.ScanFilter;
+import android.bluetooth.le.ScanRecord;
 import android.bluetooth.le.ScanResult;
 import android.bluetooth.le.ScanSettings;
 import android.content.Context;
@@ -13,6 +14,9 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.ParcelUuid;
 import android.util.Log;
+import android.bluetooth.le.ScanResult;
+import android.bluetooth.le.ScanCallback;
+import android.bluetooth.BluetoothDevice;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +32,34 @@ public class BluetoothScanner {
     // UUID сервиса глюкозы (пример для Freestyle Libre)
     private static final UUID GLUCOSE_SERVICE_UUID =
             UUID.fromString("00001808-0000-1000-8000-00805f9b34fb");
+    // Сервис CGM (для сканирования)
+    public static final UUID CGM_SERVICE =
+            UUID.fromString("0000181F-0000-1000-8000-00805f9b34fb");
+
+    // ⭐ ГЛАВНАЯ ХАРАКТЕРИСТИКА ГЛЮКОЗЫ
+    public static final UUID CGM_MEASUREMENT =
+            UUID.fromString("00002AA7-0000-1000-8000-00805f9b34fb");
+
+    // Управляющие характеристики
+    public static final UUID RECORD_ACCESS_CONTROL_POINT =
+            UUID.fromString("00002A52-0000-1000-8000-00805f9b34fb");
+
+    public static final UUID CGM_SPECIFIC_OPS_CONTROL_POINT =
+            UUID.fromString("00002AAC-0000-1000-8000-00805f9b34fb");
+
+    public static final UUID CGM_SESSION_START_TIME =
+            UUID.fromString("00002AAA-0000-1000-8000-00805f9b34fb");
+
+    public static final UUID CGM_SESSION_RUN_TIME =
+            UUID.fromString("00002AAB-0000-1000-8000-00805f9b34fb");
+
+    // Нестандартные характеристики (если понадобятся)
+    public static final UUID AIDEX_UNKNOWN_F001 =
+            UUID.fromString("0000F001-0000-1000-8000-00805f9b34fb");
+    public static final UUID AIDEX_UNKNOWN_F002 =
+            UUID.fromString("0000F002-0000-1000-8000-00805f9b34fb");
+    public static final UUID AIDEX_UNKNOWN_F003 =
+            UUID.fromString("0000F003-0000-1000-8000-00805f9b34fb");
 
     // Интерфейс для обратного вызова
     public interface ScanCallbackListener {
@@ -80,10 +112,10 @@ public class BluetoothScanner {
         // Создаем фильтр для поиска только устройств с сервисом глюкозы
         List<ScanFilter> filters = new ArrayList<>();
         ScanFilter filter = new ScanFilter.Builder()
-                .setServiceUuid(new ParcelUuid(GLUCOSE_SERVICE_UUID))
+                .setServiceUuid(new ParcelUuid(BleUuids.GLUCOSE_SERVICE))
                 .build();
         filters.add(filter);
-
+        //filters=null;
         // Настройки сканирования
         ScanSettings settings = new ScanSettings.Builder()
                 .setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY)
@@ -96,27 +128,67 @@ public class BluetoothScanner {
         scanCallback = new ScanCallback() {
             @Override
             public void onScanResult(int callbackType, ScanResult result) {
-                super.onScanResult(callbackType, result);
+                Log.d(TAG, "onScanResult CALLED!");
+
                 BluetoothDevice device = result.getDevice();
                 int rssi = result.getRssi();
-                byte[] scanRecord = result.getScanRecord() != null ?
-                        result.getScanRecord().getBytes() : null;
+                ScanRecord scanRecord = result.getScanRecord();  // ← один раз
 
+                // Получаем имя устройства (содержит серийный номер)
+                String deviceName = "Unknown";
+                String deviceAddress = "Unknown";
                 try {
-                    Log.d(TAG, "Device found: " + device.getName() + " [" + device.getAddress() + "] RSSI: " + rssi);
+                    deviceName = device.getName() != null ? device.getName() : "Unknown";
+                    deviceAddress = device.getAddress();
+                    Log.d(TAG, "Device found: " + deviceName + " [" + deviceAddress + "] RSSI: " + rssi);
+
+                    // ✅ ИЗВЛЕКАЕМ СЕРИЙНЫЙ НОМЕР ИЗ ИМЕНИ
+                    if (deviceName.contains("AiDEX")) {
+                        String[] parts = deviceName.split(" ");
+                        if (parts.length > 1) {
+                            String serialNumber = parts[1];
+                            Log.d(TAG, "✅ Serial Number: " + serialNumber);
+                        }
+                    }
                 } catch (SecurityException e) {
                     Log.d(TAG, "Device found (name/address unavailable) RSSI: " + rssi);
                 }
+
+                // Логируем HEX только при необходимости (для отладки)
+                if (scanRecord != null) {
+                    byte[] rawData = scanRecord.getBytes();
+                    StringBuilder hexString = new StringBuilder();
+                    for (byte b : rawData) {
+                        hexString.append(String.format("%02X ", b));
+                    }
+                    Log.d(TAG, "Raw Scan Record (HEX): " + hexString.toString());
+                }
+
+                // Передаём данные в слушатель
                 if (listener != null) {
-                    listener.onDeviceFound(device, rssi, scanRecord);
+                    listener.onDeviceFound(device, rssi, scanRecord != null ? scanRecord.getBytes() : null);
                 }
             }
-
-            @Override
-            public void onBatchScanResults(List<ScanResult> results) {
-                super.onBatchScanResults(results);
-                // Игнорируем для простоты
+            // Вспомогательный метод для преобразования байтов в HEX
+            private String bytesToHex(byte[] bytes) {
+                if (bytes == null) return "null";
+                StringBuilder sb = new StringBuilder();
+                for (byte b : bytes) {
+                    sb.append(String.format("%02X ", b));
+                }
+                return sb.toString();
             }
+
+            /* @Override
+            public void onBatchScanResults(List<ScanResult> results) {
+                Log.d(TAG, " onScanResult CALLED! ");
+                super.onBatchScanResults(results);
+
+                BluetoothDevice device = results.getDevice();
+                int rssi = results.getRssi();
+
+                Log.d(TAG, "Device: " + device.getName() + " [" + device.getAddress() + "] RSSI: " + rssi);
+            }*/
 
             @Override
             public void onScanFailed(int errorCode) {

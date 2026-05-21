@@ -25,3 +25,4 @@ dependencyResolutionManagement {
 rootProject.name = "Gluc"
 include ':app'
 include ':libglupro'
+include ':broadcast_test'

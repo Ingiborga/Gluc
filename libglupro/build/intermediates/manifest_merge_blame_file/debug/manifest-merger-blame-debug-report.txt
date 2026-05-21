@@ -4,17 +4,17 @@
 4    package="lwld.glucose.profile" >
 5
 6    <uses-sdk android:minSdkVersion="24" />
-6-->C:\Users\Genji\AndroidStudioProjects\Gluc\libglupro\src\main\AndroidManifest.xml
+6-->D:\proj\Gluc\libglupro\src\main\AndroidManifest.xml
 7
 8    <uses-permission android:name="android.permission.BLUETOOTH" />
-8-->C:\Users\Genji\AndroidStudioProjects\Gluc\libglupro\src\main\AndroidManifest.xml:5:5-68
-8-->C:\Users\Genji\AndroidStudioProjects\Gluc\libglupro\src\main\AndroidManifest.xml:5:22-65
+8-->D:\proj\Gluc\libglupro\src\main\AndroidManifest.xml:5:5-68
+8-->D:\proj\Gluc\libglupro\src\main\AndroidManifest.xml:5:22-65
 9    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
-9-->C:\Users\Genji\AndroidStudioProjects\Gluc\libglupro\src\main\AndroidManifest.xml:6:5-74
-9-->C:\Users\Genji\AndroidStudioProjects\Gluc\libglupro\src\main\AndroidManifest.xml:6:22-71
+9-->D:\proj\Gluc\libglupro\src\main\AndroidManifest.xml:6:5-74
+9-->D:\proj\Gluc\libglupro\src\main\AndroidManifest.xml:6:22-71
 10
 11    <application>
-11-->C:\Users\Genji\AndroidStudioProjects\Gluc\libglupro\src\main\AndroidManifest.xml:7:5-8:19
+11-->D:\proj\Gluc\libglupro\src\main\AndroidManifest.xml:7:5-8:19
 12    </application>
 13
 14</manifest>
