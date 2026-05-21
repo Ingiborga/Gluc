@@ -28,4 +28,4 @@ gradle-app.setting
 # Generated files
 *.class
 *.log
-
+.gitignore

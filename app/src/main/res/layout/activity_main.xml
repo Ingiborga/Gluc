@@ -1,26 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <FrameLayout
-        android:id="@+id/container"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/bottomNav"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bottomNav"
-        android:layout_width="0dp"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:gravity="center">
+    <!-- Заголовок -->
+    <TextView
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:menu="@menu/bottom_nav_menu"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        android:text="Текущее значение глюкозы"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="30dp"/>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <!-- Основное значение в ммоль/л -->
+    <TextView
+        android:id="@+id/glucoseValueText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="--.-"
+        android:textSize="64sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="10dp"/>
+
+    <!-- Значение в мг/дл -->
+    <TextView
+        android:id="@+id/glucoseMgdlText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="--- mg/dL"
+        android:textSize="16sp"
+        android:textColor="#666666"
+        android:layout_marginBottom="20dp"/>
+
+    <!-- Время последнего обновления -->
+    <TextView
+        android:id="@+id/timestampText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Last update: --:--:--"
+        android:textSize="14sp"
+        android:textColor="#999999"
+        android:layout_marginBottom="10dp"/>
+
+    <!-- Статус -->
+    <TextView
+        android:id="@+id/statusText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Status: Waiting for data..."
+        android:textSize="14sp"/>
+
+</LinearLayout>

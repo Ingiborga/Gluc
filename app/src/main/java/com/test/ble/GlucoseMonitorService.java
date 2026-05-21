@@ -22,8 +22,6 @@ import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
 
-import com.test.ui.ConnectionPage;
-
 import java.util.UUID;
 
 public class GlucoseMonitorService extends Service implements BleManager.BleManagerListener {
