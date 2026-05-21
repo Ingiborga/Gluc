@@ -7,7 +7,11 @@
     android:gravity="center"
     android:padding="24dp">
 
-
+    <ImageView
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:src="@drawable/ic_bluetooth"
+        android:layout_marginBottom="24dp" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -45,6 +49,11 @@
         android:text="Подключить"
         android:layout_marginBottom="8dp" />
 
-
+    <Button
+        android:id="@+id/btnSkip"
+        style="@style/Widget.MaterialComponents.Button.TextButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Пропустить (демо)" />
 
 </LinearLayout>

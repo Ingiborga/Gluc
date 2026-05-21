@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.example.broadcast">
+    android:versionCode="1"
+    android:versionName="1.0">
 
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
@@ -12,8 +13,6 @@
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-
     <uses-feature
         android:name="android.hardware.bluetooth_le"
         android:required="true" />
@@ -21,29 +20,21 @@
     <application
         android:allowBackup="true"
         android:label="Test GLU"
-        android:theme="@style/Theme.AppCompat.Light.DarkActionBar">
-
+        android:theme="@style/Theme.AppCompat.Light">
         <service
-            android:name="com.test.broadcast.BroadcastService"
+            android:name=".ble.GlucoseMonitorService"
             android:enabled="true"
-            android:exported="false" />
+            android:exported="true"></service>
 
         <activity
-            android:name="com.test.MainActivity"
+            android:name=".ui.ConnectionPage"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <!-- Receiver для LibreLink -->
-        <receiver
-            android:name="com.test.broadcast.AidexBroadcastReceiver"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="com.librelink.app.ThirdPartyIntegration.GLUCOSE_READING" />
-            </intent-filter>
-        </receiver>
     </application>
+
 </manifest>

@@ -1,8 +1,5 @@
 package com.test.ble;
 
-import static android.bluetooth.BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT;
-
-import android.Manifest;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -12,23 +9,20 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattService;
-import android.bluetooth.le.ScanRecord;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
 import android.util.Log;
 
-import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 
-import com.test.MainActivity;
+import com.test.ui.ConnectionPage;
 
 import java.util.UUID;
 
@@ -36,6 +30,12 @@ public class GlucoseMonitorService extends Service implements BleManager.BleMana
     private static final String TAG = "GlucoseMonitorService";
     private static final String CHANNEL_ID = "GlucoseMonitorChannel";
     private static final int NOTIFICATION_ID = 1;
+
+    // UUID для Freestyle Libre (пример)
+    private static final UUID GLUCOSE_SERVICE_UUID =
+            UUID.fromString("00001808-0000-1000-8000-00805f9b34fb");
+    private static final UUID GLUCOSE_MEASUREMENT_CHAR_UUID =
+            UUID.fromString("00002A18-0000-1000-8000-00805f9b34fb");
 
     private BleManager bleManager;
     private BluetoothAdapter bluetoothAdapter;
@@ -53,25 +53,20 @@ public class GlucoseMonitorService extends Service implements BleManager.BleMana
     private final BroadcastReceiver bondStateReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (BluetoothDevice.ACTION_BOND_STATE_CHANGED.equals(intent.getAction())) {
-                BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-                int bondState = intent.getIntExtra(BluetoothDevice.EXTRA_BOND_STATE, -1);
+            final String action = intent.getAction();
+            if (action == null) return;
 
-                Log.d(TAG, "Bond state changed: " + bondState);
+            if (action.equals(BluetoothDevice.ACTION_BOND_STATE_CHANGED)) {
+                BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+                if (device == null) return;
+
+                final int bondState = intent.getIntExtra(BluetoothDevice.EXTRA_BOND_STATE, -1);
 
                 if (bondState == BluetoothDevice.BOND_BONDED) {
-                    Log.d(TAG, "Device successfully bonded!");
-                    /*try {
+                    Log.d(TAG, "Bonding completed successfully");
+                    if (bleManager != null && bleManager.isConnected()) {
                         startGlucoseReading();
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
-                    }*/
-                    if (callback != null) {
-                        callback.onDeviceStatusChanged("Bonded successfully");
                     }
-
-                    // ✅ Теперь можно снова попробовать читать характеристику
-
                 }
             }
         }
@@ -85,104 +80,51 @@ public class GlucoseMonitorService extends Service implements BleManager.BleMana
         bleManager = new BleManager(this, this);
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         readHandler = new Handler(Looper.getMainLooper());
+
         // Регистрируем receiver для bonding
         registerReceiver(bondStateReceiver,
                 new IntentFilter(BluetoothDevice.ACTION_BOND_STATE_CHANGED));
     }
-    @Override
-    public void onServicesDiscovered() throws InterruptedException {
-        Log.d(TAG, "Services discovered, starting glucose reading");
-        if (deviceSerialNumber == null) {
-            SharedPreferences prefs = getSharedPreferences("glucose_prefs", MODE_PRIVATE);
-            deviceSerialNumber = prefs.getString("device_serial_number", null);
-            Log.d(TAG, "Loaded SN from prefs: " + deviceSerialNumber);
-        }
-        if (deviceSerialNumber != null && !deviceSerialNumber.isEmpty()) {
-            sendSerialNumberToDevice(deviceSerialNumber);
-            new Handler(Looper.getMainLooper()).postDelayed(() -> {
-                try {
-                    startGlucoseReading();
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-            }, 1000);
-        } else {
-            Log.e(TAG, "No serial number available, cannot activate");
-        }
-    }
+
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         startForeground(NOTIFICATION_ID, createNotification());
 
         // Получаем сохраненный MAC-адрес устройства
         SharedPreferences prefs = getSharedPreferences("glucose_prefs", MODE_PRIVATE);
-        //prefs.edit().remove("device_address").apply();
         deviceAddress = prefs.getString("device_address", null);
+
         if (deviceAddress != null && bluetoothAdapter != null) {
             BluetoothDevice device = bluetoothAdapter.getRemoteDevice(deviceAddress);
             connectToDevice(device);
         } else {
             startDeviceScanning();
         }
+
         return START_STICKY;
     }
-    private String deviceSerialNumber = null;
+
     private void startDeviceScanning() {
         scanner = new BluetoothScanner(new BluetoothScanner.ScanCallbackListener() {
             @Override
             public void onDeviceFound(BluetoothDevice device, int rssi, byte[] scanRecord) {
-                String name = "Unknown";
-                try {
-                    name = device.getName() != null ? device.getName() : "Unknown";
-                } catch (SecurityException e) {
-                    name = "Unknown";
-                }
-                if (scanRecord != null) {
-                    String serialNumber = extractSerialNumberFromBytes(scanRecord);
-                    Log.d(TAG, "Extracted serial number: " + serialNumber);
-                    if (serialNumber != null && !serialNumber.isEmpty()) {
-                        deviceSerialNumber = serialNumber;
-                        SharedPreferences prefs = getSharedPreferences("glucose_prefs", MODE_PRIVATE);
-                        prefs.edit().putString("device_serial_number", serialNumber).apply();
-                        Log.d(TAG, "Extracted SN: " + deviceSerialNumber);
-                    }
-                }
                 if (callback != null) {
+                    String name;
+                    try {
+                        name = device.getName() != null ? device.getName() : "Unknown";
+                    } catch (SecurityException e) {name="Unknown";}
                     callback.onDeviceFound(name, device.getAddress(), rssi);
                 }
                 Log.d(TAG, "Found device: " + device.getAddress());
                 SharedPreferences prefs = getSharedPreferences("glucose_prefs", MODE_PRIVATE);
                 prefs.edit().putString("device_address", device.getAddress()).apply();
                 deviceAddress = device.getAddress();
+
                 connectToDevice(device);
-                if (scanner != null) {
+
+                if (scanner != null) {  // ← теперь можно
                     scanner.stopScan();
                 }
-            }
-            private String extractSerialNumberFromBytes(byte[] scanRecord) {
-                if (scanRecord == null) return null;
-
-                int i = 0;
-                while (i < scanRecord.length) {
-                    int length = scanRecord[i] & 0xFF;
-                    if (length == 0) break;
-                    int type = scanRecord[i + 1] & 0xFF;
-
-                    if (type == 0x09) { // Complete Local Name
-                        byte[] nameBytes = new byte[length - 1];
-                        System.arraycopy(scanRecord, i + 2, nameBytes, 0, length - 1);
-                        String deviceName = new String(nameBytes);
-
-                        if (deviceName.contains("AiDEX")) {
-                            String[] parts = deviceName.split(" ");
-                            if (parts.length > 1) {
-                                return parts[1]; // "X-222226MPAJ"
-                            }
-                        }
-                    }
-                    i += length + 1;
-                }
-                return null;
             }
 
             @Override
@@ -207,83 +149,51 @@ public class GlucoseMonitorService extends Service implements BleManager.BleMana
 
     private void connectToDevice(BluetoothDevice device) {
         Log.d(TAG, "Connecting to device: " + device.getAddress());
-        bleManager.resetConnectionState();
         bleManager.connect(device);
     }
 
-    private void startGlucoseReading() throws InterruptedException {
-        Log.d(TAG, "startGlucoseReading called");
+    private void startGlucoseReading() {
         if (isReading) return;
 
-        // 1. Получаем сервис CGM
-        BluetoothGattService service = bleManager.getService(BleUuids.CGM_SERVICE);
-        if (service == null) {
-            Log.e(TAG, "CGM service (0000181f) not found");
+        BluetoothGattService glucoseService = bleManager.getService(GLUCOSE_SERVICE_UUID);
+        if (glucoseService == null) {
+            Log.e(TAG, "Glucose service not found");
             return;
         }
-        Log.d(TAG, "CGM service found");
 
-        // 2. Включаем уведомления на характеристике данных F002
-        BluetoothGattCharacteristic glucoseChar = service.getCharacteristic(BleUuids.CGM_MEASUREMENT);
+        BluetoothGattCharacteristic glucoseChar = bleManager.getCharacteristic(
+                glucoseService, GLUCOSE_MEASUREMENT_CHAR_UUID);
         if (glucoseChar == null) {
-            Log.e(TAG, "Characteristic F002 (0000f002) not found");
+            Log.e(TAG, "Glucose measurement characteristic not found");
             return;
         }
-        Log.d(TAG, "Characteristic F002 found, Properties: " + glucoseChar.getProperties());
 
         // Включаем уведомления
         bleManager.enableNotifications(glucoseChar, true);
-        Log.d(TAG, "Notifications enabled for F002");
-
-        // 3. ОТПРАВЛЯЕМ АКТИВАЦИОННУЮ КОМАНДУ НА CONTROL POINT
-        BluetoothGattCharacteristic controlPoint = service.getCharacteristic(
-                UUID.fromString("00002a52-0000-1000-8000-00805f9b34fb"));
-
-        if (controlPoint != null) {
-            // Команда активации из логов (01 00)
-            byte[] command = new byte[]{0x01, 0x00};
-            bleManager.writeCharacteristic(controlPoint, command,
-                    WRITE_TYPE_DEFAULT);
-            Log.d(TAG, "Activation command (01 00) sent to Control Point (00002a52)");
-            // После первой команды
-            Thread.sleep(100);
-            byte[] command2 = new byte[]{0x02, 0x00};
-            bleManager.writeCharacteristic(controlPoint, command2, WRITE_TYPE_DEFAULT);
-        } else {
-            Log.e(TAG, "Control Point (00002a52) not found");
-        }
 
         isReading = true;
-        Log.d(TAG, "Glucose reading started, waiting for notifications...");
+
+        // Периодическое чтение каждые 5 минут
+        readRunnable = new Runnable() {
+            @Override
+            public void run() {
+                if (bleManager.isConnected()) {
+                    bleManager.readCharacteristic(glucoseChar);
+                }
+                readHandler.postDelayed(this, 300000);
+            }
+        };
+        readHandler.post(readRunnable);
     }
 
     // Реализация BleManagerListener
     @Override
     public void onConnected() {
         Log.d(TAG, "Device connected");
-        String deviceName = bleManager.getDeviceName();
-        String deviceAddress = bleManager.getDeviceAddress();
-
-        Log.d(TAG, "Device connected: " + deviceName + " [" + deviceAddress + "]");
         if (callback != null) {
             callback.onDeviceStatusChanged("CONNECTED");
         }
-        BluetoothDevice device = bleManager.getBluetoothDevice();  // нужен метод
-        if (device != null) {
-            Log.d(TAG, "Starting bonding with: " + device.getAddress());
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
-                // TODO: Consider calling
-                //    ActivityCompat#requestPermissions
-                // here to request the missing permissions, and then overriding
-                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                //                                          int[] grantResults)
-                // to handle the case where the user grants the permission. See the documentation
-                // for ActivityCompat#requestPermissions for more details.
-                return;
-            }
-            device.createBond();
-        }
-
+        startGlucoseReading();
     }
 
     @Override
@@ -321,35 +231,20 @@ public class GlucoseMonitorService extends Service implements BleManager.BleMana
     @Override
     public void onDataReceived(byte[] data, BluetoothGattCharacteristic characteristic) {
         float glucoseValue = parseGlucoseData(data);
+        long timestamp = System.currentTimeMillis();
 
-        if (glucoseValue < 0) {
-            Log.w(TAG, "Invalid glucose data, skipping");
-            return;
-        }
-
-        // Получаем timestamp из данных (если есть) или текущее время
-        long timestamp = extractTimestampFromData(data);
-
-        // Отправляем через Callback в UI
+        // Отправляем через LiveData
         if (callback != null) {
             callback.onGlucoseDataReceived(glucoseValue, timestamp);
         }
     }
 
-
-
     @Override
     public void onBondingRequired() {
-        Log.d(TAG, "Bonding required, creating bond...");
-
-        // Создаем bonding
-        bleManager.createBond();
-
-        // Уведомляем UI
+        Log.d(TAG, "Bonding required");
         if (callback != null) {
-            callback.onDeviceStatusChanged("Bonding in progress...");
-        }
-    }
+            callback.onDeviceStatusChanged("BONDING_REQUIRED");
+        }    }
 
     @Override
     public void onBondingComplete() {
@@ -358,41 +253,14 @@ public class GlucoseMonitorService extends Service implements BleManager.BleMana
             callback.onDeviceStatusChanged("BONDING_COMPLETE");
         }
     }
-    public static class GlucoseResult {
-        public float value;        // Значение в ммоль/л
-        public long timestamp;     // Unix timestamp в миллисекундах
-        public int status;         // Статус сенсора (0=норма, 1=низкий, 2=высокий)
-        public boolean isValid;    // Валидны ли данные
-        public int sequenceNumber; // Порядковый номер
-    }
+
     private float parseGlucoseData(byte[] data) {
-        if (data.length < 4) return -1f;
-
-        int flags = data[0] & 0xFF;
-        boolean isMgDl = (flags & 0x01) == 0;  // 0=мг/дл, 1=ммоль/л
-
-        int rawGlucose = ((data[3] & 0xFF) << 8) | (data[2] & 0xFF);
-
-        if (isMgDl) {
-            return rawGlucose / 18.0f;  // мг/дл → ммоль/л
-        } else {
-            return rawGlucose / 10.0f;  // уже ммоль/л
+        // Парсинг данных в зависимости от вашего датчика
+        if (data.length >= 2) {
+            int rawGlucose = ((data[1] & 0xFF) << 8) | (data[0] & 0xFF);
+            return rawGlucose / 10.0f;
         }
-    }
-    private long extractTimestampFromData(byte[] data) {
-        if (data != null && data.length >= 8) {
-            // Unix timestamp в секундах (байты 4-7, Little-Endian)
-            long seconds = ((long)(data[7] & 0xFF) << 24) |
-                    ((long)(data[6] & 0xFF) << 16) |
-                    ((long)(data[5] & 0xFF) << 8)  |
-                    ((long)(data[4] & 0xFF));
-
-            if (seconds > 0) {
-                return seconds * 1000;  // переводим в миллисекунды
-            }
-        }
-        // Если timestamp не найден, используем текущее время
-        return System.currentTimeMillis();
+        return 0.0f;
     }
 
     private void createNotificationChannel() {
@@ -412,7 +280,7 @@ public class GlucoseMonitorService extends Service implements BleManager.BleMana
     }
 
     private Notification createNotification() {
-        Intent intent = new Intent(this, MainActivity.class);
+        Intent intent = new Intent(this, ConnectionPage.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(
                 this, 0, intent,
                 PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
@@ -442,58 +310,9 @@ public class GlucoseMonitorService extends Service implements BleManager.BleMana
             Log.e(TAG, "Receiver not registered", e);
         }
     }
-    // Добавьте этот метод в конец класса GlucoseMonitorService
-    private void sendSerialNumberToDevice(String serialNumber) {
-        Log.d(TAG, "sendSerialNumberToDevice called with: " + serialNumber);
-        BluetoothGattService service = bleManager.getService(BleUuids.CGM_SERVICE);
-        if (service == null) {
-            Log.e(TAG, "CGM service not found");
-            return;
-        }
-        BluetoothGattCharacteristic controlPoint = service.getCharacteristic(
-                UUID.fromString("00002a52-0000-1000-8000-00805f9b34fb"));
-        if (controlPoint != null) {
-            byte[] snBytes = serialNumber.getBytes();
-            byte[] command = new byte[snBytes.length + 1];
-            command[0] = 0x01;  // команда "регистрация"
-            System.arraycopy(snBytes, 0, command, 1, snBytes.length);
 
-            bleManager.writeCharacteristic(controlPoint, command,
-                    BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT);
-            Log.d(TAG, "SN sent: " + serialNumber);
-        } else {
-            Log.e(TAG, "Control point not found");
-        }
-    }
-    private String extractSerialNumberFromScanRecord(ScanRecord scanRecord) {
-        if (scanRecord == null) return null;
-
-        byte[] data = scanRecord.getBytes();
-        int i = 0;
-        while (i < data.length) {
-            int length = data[i] & 0xFF;
-            if (length == 0) break;
-            int type = data[i + 1] & 0xFF;
-
-            if (type == 0x09) { // Complete Local Name
-                byte[] nameBytes = new byte[length - 1];
-                System.arraycopy(data, i + 2, nameBytes, 0, length - 1);
-                String deviceName = new String(nameBytes);
-
-                if (deviceName.contains("AiDEX")) {
-                    String[] parts = deviceName.split(" ");
-                    if (parts.length > 1) {
-                        return parts[1]; // "X-222226MPAJ"
-                    }
-                }
-            }
-            i += length + 1;
-        }
-        return null;
-    }
     @Override
     public IBinder onBind(Intent intent) {
         return null;
     }
-
 }
