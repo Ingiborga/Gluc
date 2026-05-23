@@ -86,7 +86,7 @@ public class GlucoseMonitorService extends Service implements BleManager.BleMana
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        startForeground(NOTIFICATION_ID, createNotification());
+        //startForeground(NOTIFICATION_ID, createNotification());
 
         // Получаем сохраненный MAC-адрес устройства
         SharedPreferences prefs = getSharedPreferences("glucose_prefs", MODE_PRIVATE);
@@ -277,8 +277,8 @@ public class GlucoseMonitorService extends Service implements BleManager.BleMana
         }
     }
 
-    private Notification createNotification() {
-        Intent intent = new Intent(this, ConnectionPage.class);
+    /*private Notification createNotification() {
+        Intent intent = new Intent(this, MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(
                 this, 0, intent,
                 PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
@@ -307,7 +307,7 @@ public class GlucoseMonitorService extends Service implements BleManager.BleMana
         } catch (IllegalArgumentException e) {
             Log.e(TAG, "Receiver not registered", e);
         }
-    }
+    }*/
 
     @Override
     public IBinder onBind(Intent intent) {
