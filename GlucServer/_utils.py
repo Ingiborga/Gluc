@@ -1,10 +1,12 @@
 import json
 from datetime import datetime, timedelta
+from pathlib import Path
+
 import jwt
 from fastapi import HTTPException
 
-with open("config.json", 'r', encoding='utf-8') as file:
-    config = json.load(file)
+with open(Path(__file__).parent / "config.json", 'r', encoding='utf-8') as file:
+    CONFIG = json.load(file)
 
 
 def create_jwt_token(user_id: int) -> str:
@@ -16,14 +18,14 @@ def create_jwt_token(user_id: int) -> str:
         "type": "access"
     }
 
-    token = jwt.encode(payload, config["SECRET_KEY"], alg="HS256")
+    token = jwt.encode(payload, CONFIG["SECRET_KEY"], alg="HS256")
     return token
 
 
 def verify_jwt_token(token: str) -> dict:
     """Проверка токена при каждом запросе"""
     try:
-        payload = jwt.decode(token, config["SECRET_KEY"], algorithms=set("HS256"))
+        payload = jwt.decode(token, CONFIG["SECRET_KEY"], algorithms=set("HS256"))
         return payload
     except jwt.ExpiredSignatureError:
         raise HTTPException(status_code=401, detail="Истекший токен")
