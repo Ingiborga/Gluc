@@ -1,67 +1,106 @@
 <?xml version="1.0" encoding="utf-8"?>
-<<LinearLayout
-xmlns:android="http://schemas.android.com/apk/res/android"
-android:layout_width="match_parent"
-android:layout_height="match_parent"
-android:orientation="vertical">
-
-<!-- Периоды статистики -->
-<LinearLayout
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:layout_gravity="center_horizontal"
-    android:layout_marginTop="8dp"
-    android:layout_marginBottom="8dp">
-
-    <Button
-        android:id="@+id/button_stats_today"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Сегодня"
-        android:textSize="12sp" />
-
-    <Button
-        android:id="@+id/button_stats_yesterday"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Вчера"
-        android:textSize="12sp" />
-
-    <Button
-        android:id="@+id/button_stats_7d"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="7д"
-        android:textSize="12sp" />
-
-    <Button
-        android:id="@+id/button_stats_30d"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="30д"
-        android:textSize="12sp" />
-
-    <Button
-        android:id="@+id/button_stats_90d"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="90д"
-        android:textSize="12sp" />
-</LinearLayout>
-
-<!-- Индикаторы -->
-<LinearLayout
-    android:id="@+id/indicator_layout"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:layout_gravity="center_horizontal" />
-
-<!-- ViewPager для графиков статистики -->
-<androidx.viewpager.widget.ViewPager
-    android:id="@+id/pager"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" />
+    android:layout_height="match_parent"
+    android:background="@color/background_color">
 
-</LinearLayout>
+    <!-- Периоды статистики -->
+    <LinearLayout
+        android:id="@+id/periodLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <Button
+            android:id="@+id/button_stats_today"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Сегодня"
+            android:textSize="12sp"
+            android:background="@drawable/edit_text_border"
+            android:textColor="@color/accent_color"
+            android:textColorHint="@color/accent_color"/>
+
+        <Button
+            android:id="@+id/button_stats_yesterday"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Вчера"
+            android:textSize="12sp"
+            android:background="@drawable/edit_text_border"
+            android:textColor="@color/accent_color"
+            android:textColorHint="@color/accent_color"/>
+
+        <Button
+            android:id="@+id/button_stats_7d"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="7д"
+            android:textSize="12sp"
+            android:background="@drawable/edit_text_border"
+            android:textColor="@color/accent_color"
+            android:textColorHint="@color/accent_color"/>
+
+        <Button
+            android:id="@+id/button_stats_30d"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="30д"
+            android:textSize="12sp"
+            android:background="@drawable/edit_text_border"
+            android:textColor="@color/accent_color"
+            android:textColorHint="@color/accent_color"/>
+
+        <Button
+            android:id="@+id/button_stats_90d"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="90д"
+            android:textSize="12sp"
+            android:background="@drawable/edit_text_border"
+            android:textColor="@color/accent_color"
+            android:textColorHint="@color/accent_color"/>
+    </LinearLayout>
+
+    <!-- Индикаторы -->
+    <LinearLayout
+        android:id="@+id/indicator_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@+id/periodLayout"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- ViewPager для графиков статистики -->
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/pager"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@+id/indicator_layout"
+        app:layout_constraintBottom_toTopOf="@+id/bottomNavigationView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Нижнее меню -->
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomNavigationView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@color/background_color"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:menu="@menu/bottom_menu"
+        app:labelVisibilityMode="labeled"
+        app:itemIconTint="@color/accent_color"
+        app:itemTextColor="@color/accent_color" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

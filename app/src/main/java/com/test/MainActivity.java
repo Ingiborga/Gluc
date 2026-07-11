@@ -1,4 +1,5 @@
 package com.test;
+import android.view.Menu;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -8,6 +9,7 @@ import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.util.Log;
@@ -15,7 +17,10 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.test.ble.BleDataCallback;
 import com.test.broadcast.AidexBroadcastReceiver;
 import com.test.broadcast.BroadcastService;
@@ -23,7 +28,7 @@ import com.test.broadcast.BroadcastService;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
-import com.test.R;
+
 public class MainActivity extends AppCompatActivity {
     private static final int PERMISSION_REQUEST_CODE = 100;
 
@@ -42,6 +47,30 @@ public class MainActivity extends AppCompatActivity {
         glucoseMgdlText = findViewById(R.id.glucoseMgdlText);//сюда приходит глюкоза в другом измерении
         timestampText = findViewById(R.id.timestampText);
         statusText = findViewById(R.id.statusText);
+
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
+        bottomNavigationView.setSelectedItemId(R.id.action_glucose);
+
+        bottomNavigationView.setOnItemSelectedListener(item -> {
+            int id = item.getItemId();
+
+            if (id == R.id.action_glucose) {
+                // Остаемся на главном экране
+                return true;
+            } else if (id == R.id.action_profile) {
+                startActivity(new Intent(this, ProfileActivity.class));
+                overridePendingTransition(0, 0);
+                finish();
+                return true;
+            } else if (id == R.id.action_graph) {
+                startActivity(new Intent(this, GraphActivity.class));
+                overridePendingTransition(0, 0);
+                finish();
+                return true;
+            }
+
+            return false;
+        });
 
         AidexBroadcastReceiver.setCallback(new BleDataCallback() {//сюда приходит значение глюкозы
             @Override
@@ -73,7 +102,9 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         checkPermissions();
+
     }
+
 
     private void updateGlucoseDisplay(float glucoseMmolL, long timestamp) {//в окошечки приходят значения клюкозы
         if (glucoseValueText != null) {
