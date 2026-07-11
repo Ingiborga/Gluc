@@ -13,15 +13,23 @@
         android:allowBackup="true"
         android:label="Test GLU"
         android:theme="@style/Theme.AppCompat.Light.DarkActionBar">  <!-- ← ГЛАВНОЕ: ДОБАВЬТЕ ЭТУ СТРОКУ -->
-
         <activity
             android:name="com.test.MainActivity"
-            android:exported="true">
+            android:exported="true" />
+        <activity
+            android:name="com.test.ProfileActivity"
+            android:exported="false" />
+        <activity
+            android:name="com.test.AuthActivity"
+            android:exported="false">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name="com.test.GraphActivity"
+            android:exported="false" />
 
         <service
             android:name="com.test.broadcast.BroadcastService"
