@@ -1,5 +1,4 @@
 package com.test;
-import android.view.Menu;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -9,7 +8,6 @@ import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.util.Log;
@@ -17,12 +15,10 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.test.ble.BleDataCallback;
-import com.test.broadcast.AidexBroadcastReceiver;
+import com.test.broadcast.BroadcastReceiver;
 import com.test.broadcast.BroadcastService;
 
 import java.text.SimpleDateFormat;
@@ -32,7 +28,7 @@ import java.util.Locale;
 public class MainActivity extends AppCompatActivity {
     private static final int PERMISSION_REQUEST_CODE = 100;
 
-    private AidexBroadcastReceiver libreReceiver;
+    private BroadcastReceiver libreReceiver;
     private TextView glucoseValueText;
     private TextView glucoseMgdlText;
     private TextView timestampText;
@@ -71,8 +67,7 @@ public class MainActivity extends AppCompatActivity {
 
             return false;
         });
-
-        AidexBroadcastReceiver.setCallback(new BleDataCallback() {//сюда приходит значение глюкозы
+        BroadcastReceiver.setCallback(new BleDataCallback() {//сюда приходит значение глюкозы
             @Override
             public void onGlucoseDataReceived(float glucoseValue, long timestamp) {
                 runOnUiThread(() -> updateGlucoseDisplay(glucoseValue, timestamp));
@@ -104,8 +99,6 @@ public class MainActivity extends AppCompatActivity {
         checkPermissions();
 
     }
-
-
     private void updateGlucoseDisplay(float glucoseMmolL, long timestamp) {//в окошечки приходят значения клюкозы
         if (glucoseValueText != null) {
             glucoseValueText.setText(String.format(Locale.US, "%.1f", glucoseMmolL));
@@ -122,28 +115,7 @@ public class MainActivity extends AppCompatActivity {
                 glucoseMmolL, glucoseMmolL * 18.0f));
     }
 
-    @SuppressLint("UnspecifiedRegisterReceiverFlag")
-    @Override
-    protected void onResume() {//при запуске страницы запускаются сервисы по чтению глюкозы
-        super.onResume();
 
-        libreReceiver = new AidexBroadcastReceiver();
-        IntentFilter filter = new IntentFilter();
-        filter.addAction("com.librelink.app.ThirdPartyIntegration.GLUCOSE_READING");
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            registerReceiver(libreReceiver, filter, Context.RECEIVER_EXPORTED);
-        } else {
-            registerReceiver(libreReceiver, filter);
-        }
-
-        Intent intent = new Intent(this, BroadcastService.class);
-        startService(intent);
-
-        if (statusText != null) {
-            statusText.setText("Status: Monitoring...");
-        }
-    }
 
     @Override
     protected void onPause() {
@@ -158,7 +130,7 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
         Intent intent = new Intent(this, BroadcastService.class);
         stopService(intent);
-        AidexBroadcastReceiver.setCallback(null);
+        BroadcastReceiver.setCallback(null);
     }
 
     private void checkPermissions() {

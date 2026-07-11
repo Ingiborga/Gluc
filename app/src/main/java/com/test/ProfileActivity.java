@@ -11,7 +11,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.test.broadcast.AidexBroadcastReceiver;
+import com.test.broadcast.BroadcastReceiver;
 import com.test.broadcast.BroadcastService;
 
 public class ProfileActivity extends AppCompatActivity {
@@ -109,7 +109,7 @@ public class ProfileActivity extends AppCompatActivity {
         super.onDestroy();
         Intent intent = new Intent(this, BroadcastService.class);
         stopService(intent);
-        AidexBroadcastReceiver.setCallback(null);
+        BroadcastReceiver.setCallback(null);
     }
 
 }

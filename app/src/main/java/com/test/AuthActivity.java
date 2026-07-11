@@ -1,27 +1,49 @@
 package com.test;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.RadioButton;
-import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.test.broadcast.AidexBroadcastReceiver;
+import com.test.broadcast.BroadcastReceiver;
 import com.test.broadcast.BroadcastService;
 
 public class AuthActivity extends AppCompatActivity {
 
     private SharedPreferences prefs;
+    private BroadcastReceiver libreReceiver;
+
     private  SharedPreferences.Editor editor;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         initPrefs();
+
+        libreReceiver = new BroadcastReceiver();
+        IntentFilter filter = new IntentFilter();
+        filter.addAction("com.librelink.app.ThirdPartyIntegration.GLUCOSE_READING");
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            registerReceiver(libreReceiver, filter, Context.RECEIVER_EXPORTED);
+        } else {
+            registerReceiver(libreReceiver, filter);
+        }
+
+        Intent serviceIntent = new Intent(this, BroadcastService.class);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            startForegroundService(serviceIntent);
+        } else {
+            startService(serviceIntent);
+        }
 
         if (prefs.contains("email")) {
             // Настройки есть
@@ -65,14 +87,13 @@ public class AuthActivity extends AppCompatActivity {
         finish();
     }
 
+    @SuppressLint("UnspecifiedRegisterReceiverFlag")
     @Override
     protected void onResume() {//при запуске страницы запускаются сервисы по чтению глюкозы
         super.onResume();
 
-        //при нажатии кнопок сохранение данных локально и отправка на сервер
 
     }
-
     @Override
     protected void onPause() {
         super.onPause();
@@ -82,9 +103,7 @@ public class AuthActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Intent intent = new Intent(this, BroadcastService.class);
-        stopService(intent);
-        AidexBroadcastReceiver.setCallback(null);
+
     }
 
 }
