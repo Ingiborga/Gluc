@@ -33,7 +33,9 @@ public class BroadcastService extends Service {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             registerReceiver(receiver, filter, Context.RECEIVER_NOT_EXPORTED);
         } else {
-            registerReceiver(receiver, filter);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                registerReceiver(receiver, filter,Context.RECEIVER_EXPORTED);
+            }
         }
         Log.d(TAG, "BroadcastService registered for LibreLink");
     }

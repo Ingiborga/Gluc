@@ -20,7 +20,8 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.test.ble.BleDataCallback;
 import com.test.broadcast.BroadcastReceiver;
 import com.test.broadcast.BroadcastService;
-
+import com.test.db.DBHelper;
+import com.test.db.dbCallback;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -38,6 +39,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        DBHelper dbHelper = new DBHelper(this);
+        dbCallback.init(dbHelper);
 
         glucoseValueText = findViewById(R.id.glucoseValueText);//сюда приходит глюкоза
         glucoseMgdlText = findViewById(R.id.glucoseMgdlText);//сюда приходит глюкоза в другом измерении
@@ -64,13 +68,13 @@ public class MainActivity extends AppCompatActivity {
                 finish();
                 return true;
             }
-
             return false;
         });
         BroadcastReceiver.setCallback(new BleDataCallback() {//сюда приходит значение глюкозы
             @Override
             public void onGlucoseDataReceived(float glucoseValue, long timestamp) {
                 runOnUiThread(() -> updateGlucoseDisplay(glucoseValue, timestamp));
+                dbCallback.add_data(glucoseValue,timestamp);
             }
             @Override
             public void onDeviceStatusChanged(String status) {
@@ -128,9 +132,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Intent intent = new Intent(this, BroadcastService.class);
-        stopService(intent);
-        BroadcastReceiver.setCallback(null);
+        //Intent intent = new Intent(this, BroadcastService.class);
+        //stopService(intent);
+        //BroadcastReceiver.setCallback(null);
     }
 
     private void checkPermissions() {

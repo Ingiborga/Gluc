@@ -50,10 +50,8 @@ public class GraphActivity extends AppCompatActivity {
         });
     }
     @Override
-    protected void onResume() {//при запуске страницы запускаются сервисы по чтению глюкозы
+    protected void onResume() {
         super.onResume();
-
-        //при нажатии кнопок сохранение данных локально и отправка на сервер
 
     }
 
