@@ -21,7 +21,7 @@ import com.test.ble.BleDataCallback;
 import com.test.broadcast.BroadcastReceiver;
 import com.test.broadcast.BroadcastService;
 import com.test.db.DBHelper;
-import com.test.db.dbCallback;
+import com.test.db.DbTools;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         DBHelper dbHelper = new DBHelper(this);
-        dbCallback.init(dbHelper);
+        DbTools.init(dbHelper);
 
         glucoseValueText = findViewById(R.id.glucoseValueText);//сюда приходит глюкоза
         glucoseMgdlText = findViewById(R.id.glucoseMgdlText);//сюда приходит глюкоза в другом измерении
@@ -74,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onGlucoseDataReceived(float glucoseValue, long timestamp) {
                 runOnUiThread(() -> updateGlucoseDisplay(glucoseValue, timestamp));
-                dbCallback.add_data(glucoseValue,timestamp);
+                DbTools.add_data(glucoseValue,timestamp);
             }
             @Override
             public void onDeviceStatusChanged(String status) {

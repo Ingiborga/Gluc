@@ -15,8 +15,6 @@ import com.test.broadcast.BroadcastReceiver;
 import com.test.broadcast.BroadcastService;
 
 public class ProfileActivity extends AppCompatActivity {
-    private TextView user_email;//логин
-    private TextView user_pass;
     private SharedPreferences prefs;
     private  SharedPreferences.Editor editor;
     @Override
@@ -107,9 +105,9 @@ public class ProfileActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Intent intent = new Intent(this, BroadcastService.class);
-        stopService(intent);
-        BroadcastReceiver.setCallback(null);
+        //Intent intent = new Intent(this, BroadcastService.class);
+        //stopService(intent);
+        //BroadcastReceiver.setCallback(null);
     }
 
 }

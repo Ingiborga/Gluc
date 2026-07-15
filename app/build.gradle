@@ -6,7 +6,7 @@ plugins {
 
 android {
     namespace 'com.test'
-    compileSdk 34
+    compileSdk 35
 
     defaultConfig {
         applicationId "com.test.glucn"
@@ -62,6 +62,7 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2'
     implementation 'com.google.android.material:material:1.12.0'
     implementation 'androidx.fragment:fragment-ktx:1.6.2'
+    implementation 'com.github.AppDevNext:AndroidChart:3.1.0.27'
 }
 
 // УДАЛИТЕ блок configurations.all - он вызывает конфликты версий
