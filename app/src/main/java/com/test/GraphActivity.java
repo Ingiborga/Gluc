@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -36,6 +37,7 @@ public class GraphActivity extends AppCompatActivity {
     private TextView user_pass;
     private LineChart chartView;
     private ArrayList<String> allLabels = new ArrayList<>();
+    private boolean isPredictAdded = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +68,10 @@ public class GraphActivity extends AppCompatActivity {
             }
             return false;
         });
+        float heValue = getIntent().getFloatExtra("he_value", -1);
+        if (heValue > 0) {
+            Toast.makeText(this, " Попробуйте еще раз", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void loadChartData() {
@@ -133,6 +139,16 @@ public class GraphActivity extends AppCompatActivity {
         if (text.isEmpty()) {
             Toast.makeText(this, "Введите количество ХЕ", Toast.LENGTH_SHORT).show();
             return;
+        }
+        if (isPredictAdded) {
+            Intent intent = new Intent(this, GraphActivity.class);
+            intent.putExtra("he_value", text); // Передаем значение ХЕ
+            startActivity(intent);
+            finish();
+            return;
+        }
+        else{
+            isPredictAdded=true;
         }
 
         try {

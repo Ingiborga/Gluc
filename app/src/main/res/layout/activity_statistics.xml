@@ -40,11 +40,11 @@
         android:background="@drawable/edit_text_border"
         android:textColor="@color/accent_color"
         android:textColorHint="@color/accent_color"
-        app:layout_constraintBottom_toTopOf="@+id/btnLogin"
+        app:layout_constraintBottom_toTopOf="@+id/calculateButton"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
     <Button
-        android:id="@+id/btnLogin"
+        android:id="@+id/calculateButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="Рассчитать"
