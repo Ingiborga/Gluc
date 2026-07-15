@@ -17,6 +17,8 @@ import com.test.broadcast.BroadcastService;
 public class ProfileActivity extends AppCompatActivity {
     private SharedPreferences prefs;
     private  SharedPreferences.Editor editor;
+    TextView upper_limit_glucose;
+    TextView lower_limit_glucose;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,11 +27,11 @@ public class ProfileActivity extends AppCompatActivity {
         TextView user_login=findViewById(R.id.user_login);
         user_login.setText(prefs.getString("email", ""));
 
-        TextView upper_limit_glucose=findViewById(R.id.upper_limit_glucose);
-        upper_limit_glucose.setText(prefs.getString("upper_limit_glucose", ""));
+        upper_limit_glucose=findViewById(R.id.upper_limit_glucose);
+        upper_limit_glucose.setHint("Верхняя граница: "+prefs.getString("upper_limit_glucose", ""));
 
-        TextView lower_limit_glucose=findViewById(R.id.lower_limit_glucose);
-        lower_limit_glucose.setText(prefs.getString("lower_limit_glucose", ""));
+        lower_limit_glucose=findViewById(R.id.lower_limit_glucose);
+        lower_limit_glucose.setHint("Нижняя граница: "+prefs.getString("lower_limit_glucose", ""));
 
         findViewById(R.id.ottai).setOnClickListener((view)->onRadioButtonClicked(view));
         // устанавливаем обработчики для кнопок
@@ -87,6 +89,19 @@ public class ProfileActivity extends AppCompatActivity {
                 editor.putString("glucometer", "aidex");
                 break;
         }
+    }
+    public void ApplySettings(View view){
+        editor.putString("lower_limit_glucose", String.valueOf(lower_limit_glucose.getText()));
+        editor.putString("upper_limit_glucose", String.valueOf(upper_limit_glucose.getText()));
+        editor.apply();
+    }
+    public void LogoutAcc(View view){
+        prefs.edit().remove("email").apply();
+        prefs.edit().remove("password").apply();
+        editor.apply();
+        startActivity(new Intent(this, AuthActivity.class));
+        overridePendingTransition(0, 0);
+        finish();
     }
     @Override
     protected void onResume() {//при запуске страницы запускаются сервисы по чтению глюкозы

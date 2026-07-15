@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.RadioButton;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -79,9 +80,28 @@ public class AuthActivity extends AppCompatActivity {
         EditText user_email = findViewById(R.id.editTextTextEmailAddress);
         EditText user_pass = findViewById(R.id.editTextTextPassword);
         //сохранение в память
+        String mailtext = user_email.getText().toString();
+        String passtext = user_email.getText().toString();
+        if (mailtext.isEmpty()) {
+            Toast.makeText(this, "Введите почту", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (passtext.isEmpty()) {
+            Toast.makeText(this, "Введите пароль", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        //Проверка на верный пароль либо добавление в бд на сервере
+        if (mailtext.isEmpty()) {
+            Toast.makeText(this, "Введите почту", Toast.LENGTH_SHORT).show();
+            return;
+        }
         editor.putString("email", user_email.getText().toString());
         editor.putString("password", user_pass.getText().toString());
+        editor.putString("upper_limit_glucose", "5");
+        editor.putString("upper_limit_glucose", "10");
+
         editor.apply();
+
         startActivity(new Intent(this, MainActivity.class));
         overridePendingTransition(0, 0);
         finish();

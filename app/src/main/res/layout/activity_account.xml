@@ -78,7 +78,6 @@
                 android:id="@+id/upper_limit_glucose"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Верхняя граница"
                 android:inputType="numberDecimal"
                 android:padding="16dp"
                 android:background="@drawable/edit_text_border"
@@ -90,14 +89,32 @@
                 android:id="@+id/lower_limit_glucose"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Нижняя граница"
                 android:inputType="numberDecimal"
                 android:padding="16dp"
                 android:background="@drawable/edit_text_border"
                 android:textColor="@color/accent_color"
                 android:textColorHint="@color/accent_color"
                 android:layout_marginBottom="16dp" />
-
+            <Button
+                android:id="@+id/settings_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Применить настройки"
+                android:padding="12dp"
+                android:background="@drawable/edit_text_border_accent"
+                android:textColor="@color/font_color"
+                android:textSize="16sp"
+                android:onClick="ApplySettings"/>
+            <Button
+                android:id="@+id/logout_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Выйти из аккаунта"
+                android:padding="12dp"
+                android:textColor="@color/accent_color"
+                android:textSize="16sp"
+                android:background="@drawable/edit_text_border"
+                android:onClick="LogoutAcc"/>
             <ProgressBar
                 android:id="@+id/progressBar"
                 android:layout_width="wrap_content"

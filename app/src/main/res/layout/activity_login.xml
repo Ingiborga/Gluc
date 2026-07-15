@@ -86,10 +86,11 @@
             android:layout_height="wrap_content"
             android:text="Войти"
             android:padding="12dp"
-            android:background="@color/accent_color"
+            android:background="@drawable/edit_text_border_accent"
             android:textColor="@color/font_color"
             android:textSize="16sp"
-            android:onClick="PushButton"/>
+            android:onClick="PushButton"
+            />
 
         <ProgressBar
             android:id="@+id/progressBar"
