@@ -1,4 +1,4 @@
-package com.test;
+package com.test.activity;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -11,8 +11,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.test.broadcast.BroadcastReceiver;
-import com.test.broadcast.BroadcastService;
+import com.test.R;
 
 public class ProfileActivity extends AppCompatActivity {
     private SharedPreferences prefs;
@@ -25,7 +24,7 @@ public class ProfileActivity extends AppCompatActivity {
         setContentView(R.layout.activity_account);
         initPrefs();
         TextView user_login=findViewById(R.id.user_login);
-        user_login.setText(prefs.getString("email", ""));
+        user_login.setText(prefs.getString("username", ""));
 
         upper_limit_glucose=findViewById(R.id.upper_limit_glucose);
         upper_limit_glucose.setHint("Верхняя граница: "+prefs.getString("upper_limit_glucose", ""));

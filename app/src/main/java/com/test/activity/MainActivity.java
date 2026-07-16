@@ -1,10 +1,7 @@
-package com.test;
+package com.test.activity;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -17,9 +14,9 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.test.R;
 import com.test.ble.BleDataCallback;
 import com.test.broadcast.BroadcastReceiver;
-import com.test.broadcast.BroadcastService;
 import com.test.db.DBHelper;
 import com.test.db.DbTools;
 import java.text.SimpleDateFormat;

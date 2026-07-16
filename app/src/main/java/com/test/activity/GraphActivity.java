@@ -1,4 +1,4 @@
-package com.test;
+package com.test.activity;
 
 import android.content.Intent;
 import android.database.sqlite.SQLiteException;
@@ -6,7 +6,6 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -20,8 +19,8 @@ import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
-import com.test.broadcast.BroadcastReceiver;
-import com.test.broadcast.BroadcastService;
+import com.test.GlucosePredictor;
+import com.test.R;
 import com.test.db.DbTools;
 
 import java.text.ParseException;
