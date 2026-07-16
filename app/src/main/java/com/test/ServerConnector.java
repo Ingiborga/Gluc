@@ -10,7 +10,7 @@ import retrofit2.http.GET;
 import retrofit2.http.POST;
 
 public class ServerConnector {
-    public static final String serverURL = "http://192.168.0.190:8001/";
+    public static final String serverURL = "http://localhost:8001/";
 
     public static class ResponseMessage {
         public String access_token;
