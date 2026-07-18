@@ -1,10 +1,10 @@
 {
-  "SECRET_KEY": "4;8$y52<kFZACSxVU>R7.JMdz",
   "db_host": "localhost",
   "db_port": "5432",
   "db_name": "GlucDB",
   "schema_name": "public",
   "username": "postgres",
   "password": "postgres",
-  "debug": "True"
+  "debug": "True",
+  "ALLOWED_ORIGINS": ["*"]
 }

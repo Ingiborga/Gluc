@@ -3,9 +3,7 @@ from typing import Optional
 
 from fastapi import FastAPI
 from starlette import status
-from starlette.responses import Response
-from pydantic_models import UserRegister, UserLogin, Token, GlucoseReading
-from _utils import create_jwt_token, verify_jwt_token
+from pydantic_models import UserRegister, UserLogin, Token
 
 
 app = FastAPI(
