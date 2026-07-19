@@ -1,4 +1,4 @@
-package com.test;
+package com.test.tools;
 
 import android.database.sqlite.SQLiteException;
 import android.graphics.Color;
@@ -12,20 +12,17 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.test.db.DbTools;
-import com.test.DataHelp;
-import java.text.SimpleDateFormat;
+
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 public class GraphHelper {
     public static Map<String, List<?>>loadChartData() {
         List<Float> glucoseValues = new ArrayList<>();
         List<String> timestamps = new ArrayList<>();
-        String today=DataHelp.get_today_date();
+        String today= DateHelp.get_today_date();
         try {
             Map<String, List<?>> data = DbTools.get_data(today, today);
             glucoseValues = (List<Float>) data.get("glucose");

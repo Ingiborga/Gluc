@@ -1,10 +1,17 @@
 package com.test.db;
+import static android.content.Context.MODE_PRIVATE;
+
 import android.annotation.SuppressLint;
 import android.content.ContentValues;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.util.Log;
+
+import com.test.server_connector.ServerConnector;
+import com.test.tools.DateHelp;
 
 import java.sql.Date;
 import java.sql.Timestamp;
@@ -121,5 +128,85 @@ public class DbTools {
         cursor.close();
         db.close();
         return glucose;
+    }
+    public static List<ServerConnector.GlucoseRecord> get_data_to_server(Context context) {
+        List<ServerConnector.GlucoseRecord> records = new ArrayList<>();
+        SharedPreferences prefs = context.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        int maxId=1;
+
+        int last_id = prefs.getInt("last_send_data_id", 0);  // ← 0, а не 1
+
+        if (dbHelper == null) {
+            Log.e("DbTools", "dbHelper is NULL!");
+            return records;
+        }
+
+        try {
+            String query = "SELECT * FROM glucose_values " +
+                    "WHERE id > ? " +                    // ← > а не >=
+                    "ORDER BY id ASC " +
+                    "LIMIT 256";                         // ← максимум 256 строк
+
+            Log.d("DbTools", "Query: " + query);
+            Log.d("DbTools", "From id: " + last_id);
+
+            Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(last_id)});
+
+            maxId = last_id;
+
+            if (cursor.moveToFirst()) {
+                int idIndex = cursor.getColumnIndex("id");
+                int glucoseIndex = cursor.getColumnIndex("glucose");
+                int timestampIndex = cursor.getColumnIndex("timestamp");
+
+                Log.d("DbTools", "idIndex: " + idIndex +
+                        ", glucoseIndex: " + glucoseIndex +
+                        ", timestampIndex: " + timestampIndex);
+
+                do {
+                    if (glucoseIndex >= 0 && timestampIndex >= 0) {
+                        int id = cursor.getInt(idIndex);
+                        float glucose = cursor.getFloat(glucoseIndex);
+                        float rounded = Math.round(glucose * 100) / 100.0f;
+                        long timestampLong = cursor.getLong(timestampIndex);
+
+                        String timestampStr = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+                                .format(new Date(timestampLong));
+
+                        records.add(new ServerConnector.GlucoseRecord(String.valueOf(rounded), timestampStr));
+
+                        // Запоминаем максимальный ID
+                        if (id > maxId) {
+                            maxId = id;
+                        }
+
+                        Log.d("DbTools", "Found: id=" + id + ", glucose=" + rounded + ", timestamp=" + timestampStr);
+                    }
+                } while (cursor.moveToNext());
+            } else {
+                Log.d("DbTools", "Cursor is EMPTY! No data found.");
+            }
+            cursor.close();
+
+        } catch (SQLiteException e) {
+            Log.e("DbTools", "Ошибка БД: " + e.getMessage());
+        } finally {
+            db.close();
+        }
+
+        // ✅ Сохраняем только если данные были отправлены
+        if (!records.isEmpty()) {
+            editor.putInt("last_send_data_id", maxId);
+            editor.apply();
+            Log.d("DbTools", "Сохранён last_send_data_id: " + maxId);
+            Log.d("DbTools", "Отправлено записей: " + records.size());
+        } else {
+            Log.d("DbTools", "Нет новых данных для отправки");
+        }
+
+        return records;
     }
 }

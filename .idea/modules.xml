@@ -2,12 +2,10 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Gluc.iml" filepath="$PROJECT_DIR$/.idea/modules/Gluc.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/Gluc.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/Gluc.app.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/Gluc.app.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/Gluc.app.androidTest.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/Gluc.app.main.iml" filepath="$PROJECT_DIR$/.idea/modules/app/Gluc.app.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/Gluc.app.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/Gluc.app.unitTest.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/libglupro/Gluc.libglupro.iml" filepath="$PROJECT_DIR$/.idea/modules/libglupro/Gluc.libglupro.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/libglupro/Gluc.libglupro.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/libglupro/Gluc.libglupro.androidTest.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/libglupro/Gluc.libglupro.main.iml" filepath="$PROJECT_DIR$/.idea/modules/libglupro/Gluc.libglupro.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/libglupro/Gluc.libglupro.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/libglupro/Gluc.libglupro.unitTest.iml" />

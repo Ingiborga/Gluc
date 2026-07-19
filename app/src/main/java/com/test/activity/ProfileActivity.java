@@ -3,15 +3,26 @@ package com.test.activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.test.R;
+import com.test.db.DbTools;
+import com.test.server_connector.ServerConnector;
+
+import java.io.IOException;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class ProfileActivity extends AppCompatActivity {
     private SharedPreferences prefs;
@@ -67,7 +78,47 @@ public class ProfileActivity extends AppCompatActivity {
             return false;
         });
 
-        //проверка, если данные есть, то переход на следующую страницу
+//отправление на сервер Потом ПЕРЕПИСАТЬ!!!
+        String login = prefs.getString("username","");
+        List<ServerConnector.GlucoseRecord> data = DbTools.get_data_to_server(ProfileActivity.this);
+        ServerConnector.SendDataRequest(    getApplicationContext(),login,data, new Callback<ServerConnector.ResponseMessage>() {
+            @Override
+            public void onResponse(Call<ServerConnector.ResponseMessage> call, Response<ServerConnector.ResponseMessage> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    Log.d("ServerConnector", "Запрос успешно получен");
+                    ServerConnector.ResponseMessage body = response.body();
+
+                    Log.d("ServerConnector", "Access Token: " + body.status);
+
+                }
+                else {
+                    Log.d("ServerConnector", "Код ответа: " + response.code());
+
+                    String errorMessage = "Неизвестная ошибка";
+                    try {
+                        if (response.errorBody() != null) {
+                            errorMessage = response.errorBody().string();
+                            Log.d("ServerConnector", "Тело ошибки: " + errorMessage);
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                    String finalErrorMessage = errorMessage;
+                    runOnUiThread(() -> {
+                        Toast.makeText(ProfileActivity.this,
+                                "Ошибка сервера (код " + response.code() + "): " + finalErrorMessage,
+                                Toast.LENGTH_LONG).show();
+                    });
+                }
+            }
+            @Override
+            public void onFailure(Call<ServerConnector.ResponseMessage> call, Throwable t) {
+                Log.d("ServerConnector", "Запрос не получен");
+                Log.d("ServerConnector", String.valueOf(t.getMessage()));
+                Toast.makeText(ProfileActivity.this, "Ошибка клиента", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
     private void initPrefs() {
         prefs = getSharedPreferences("MyPrefs", MODE_PRIVATE);

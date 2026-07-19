@@ -2,8 +2,6 @@ package com.test.activity;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.sqlite.SQLiteException;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -21,17 +19,14 @@ import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
-import com.test.DataHelp;
-import com.test.GlucosePredictor;
+import com.test.tools.DateHelp;
+import com.test.glucose_analize.GlucosePredictor;
 import com.test.R;
-import com.test.db.DbTools;
-import com.test.GraphHelper;
+import com.test.tools.GraphHelper;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 public class GraphActivity extends AppCompatActivity {
@@ -134,7 +129,7 @@ public class GraphActivity extends AppCompatActivity {
                 return;
             }
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            String timestamp_now = DataHelp.current_time();
+            String timestamp_now = DateHelp.current_time();
             Map<String, List<?>> data = GlucosePredictor.main(gluc_now, timestamp_now, he_value, 15);
             Log.d("GraphHelper", "predictGlucoseValues: " + data.get("glucose").size() + ", timestamps: " + data.get("dates").size());
 

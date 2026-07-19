@@ -1,8 +1,7 @@
-package com.test;
+package com.test.glucose_analize;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import java.text.ParseException;
@@ -61,7 +60,6 @@ public class GlucosePredictor {
     private GlucosePredictor() {
         // утилитарный класс, экземпляры не создаются
     }
-
     /**
      * Возвращает прогнозируемый пиковый уровень глюкозы после употребления
      * заданного количества ХЕ.
@@ -173,40 +171,25 @@ public class GlucosePredictor {
      * Пример использования модуля.
      */
     public static Map<String, List<?>> main(float current, String current_time, float xe, int step ) throws ParseException {
-        //double current = 6.5;   // текущий уровень глюкозы, ммоль/л
-        //double xe = 3.0;        // съедено 3 ХЕ
         ArrayList<Float> glucose_values = new ArrayList<>();
         ArrayList<String> date_values= new ArrayList<>();
 
         float peak = predictPeakGlucose(current, xe);
         float[] curve = predictCurve(current, xe, step, TIME_TO_BASELINE_MIN);
-
-        //System.out.printf("Прогнозируемый пик глюкозы: %.2f ммоль/л%n", peak);
-
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//задаем формат
         Date d = sdf.parse(current_time);//парсим
         Calendar cal = Calendar.getInstance();
         cal.setTime(d);
-        int current_hours = cal.get(Calendar.HOUR_OF_DAY);
-        int current_minutes = cal.get(Calendar.MINUTE);
-        //int current_seconds = cal.get(Calendar.SECOND);
-
-        //System.out.println("Кривая прогноза (шаг 15 мин, 180 мин):");
-        //"2026-07-14 12:00:00"
-
         for (int i = 0; i < curve.length; i++) {
             glucose_values.add(curve[i]);
-            // Добавляем шаг в минутах
             cal.add(Calendar.MINUTE, step);
             date_values.add(sdf.format(cal.getTime()));
-
             System.out.printf("t=%3d мин -> %.2f ммоль/л%n", i * step, curve[i]);
         }
         Map<String, List<?>> result = new HashMap<>();
         result.put("glucose", glucose_values);
         result.put("dates", date_values);
         result.put("peak", Collections.singletonList(peak));
-
         return result;
     }
 }

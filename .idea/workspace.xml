@@ -77,35 +77,38 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e9d47b17-46be-4444-bfa9-1735b34eb0d8" name="Changes" comment="Graph update">
-      <change afterPath="$PROJECT_DIR$/GlucServer/DB/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GlucServer/DB/engine.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GlucServer/DB/models.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GlucServer/DB/session.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GlucServer/api/auth.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GlucServer/api/dependencies.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GlucServer/api/glucose.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GlucServer/config.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GlucServer/main.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GlucServer/schemas/auth.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GlucServer/schemas/glucose.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GlucServer/security/encryption.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GlucServer/security/hashing.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GlucServer/security/tokens.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/AndroidProjectSystem.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/codeStyles/Project.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/codeStyles/codeStyleConfig.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/deploymentTargetSelector.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/deploymentTargetSelector.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/deviceManager.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/migrations.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/render.experimental.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/runConfigurations.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/.gitignore" beforeDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/GlucServer/.idea/GlucServer.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/8.9/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.9/fileHashes/fileHashes.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/file-system.probe" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/file-system.probe" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__com_github_NightscoutFoundation_xDrip_master_SNAPSHOT.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules/Gluc.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules/app/Gluc.app.androidTest.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules/app/Gluc.app.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules/app/Gluc.app.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules/app/Gluc.app.main.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules/app/Gluc.app.main.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules/app/Gluc.app.unitTest.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules/app/Gluc.app.unitTest.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules/libglupro/Gluc.libglupro.androidTest.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules/libglupro/Gluc.libglupro.androidTest.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules/libglupro/Gluc.libglupro.main.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules/libglupro/Gluc.libglupro.main.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules/libglupro/Gluc.libglupro.unitTest.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules/libglupro/Gluc.libglupro.unitTest.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GlucServer/api/auth.py" beforeDir="false" afterPath="$PROJECT_DIR$/GlucServer/api/auth.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GlucServer/api/dependencies.py" beforeDir="false" afterPath="$PROJECT_DIR$/GlucServer/api/dependencies.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GlucServer/api/glucose.py" beforeDir="false" afterPath="$PROJECT_DIR$/GlucServer/api/glucose.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GlucServer/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/GlucServer/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GlucServer/security/hashing.py" beforeDir="false" afterPath="$PROJECT_DIR$/GlucServer/security/hashing.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/test/DataHelp.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/test/tools/DateHelp.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/test/GlucosePredictor.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/test/glucose_analize/GlucosePredictor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/test/GraphHelper.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/test/tools/GraphHelper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/test/ServerConnector.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/test/server_connector/ServerConnector.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/test/activity/AuthActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/test/activity/AuthActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/test/activity/GraphActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/test/activity/GraphActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/test/activity/MainActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/test/activity/MainActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/test/activity/ProfileActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/test/activity/ProfileActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/test/broadcast/BroadcastReceiver.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/test/broadcast/BroadcastReceiver.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/test/db/DbTools.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/test/db/DbTools.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -120,6 +123,23 @@
     <projectState path="$PROJECT_DIR$">
       <ProjectState />
     </projectState>
+  </component>
+  <component name="ExternalProjectsManager">
+    <system id="GRADLE">
+      <state>
+        <projects_view>
+          <tree_state>
+            <expand>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="Gluc" type="f1a62948:ProjectNode" />
+              </path>
+            </expand>
+            <select />
+          </tree_state>
+        </projects_view>
+      </state>
+    </system>
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -148,7 +168,7 @@
   <component name="GithubPullRequestsUISettings">{
   &quot;selectedUrlAndAccountId&quot;: {
     &quot;url&quot;: &quot;https://github.com/Ingiborga/Gluc&quot;,
-    &quot;accountId&quot;: &quot;70d7322d-a3e4-4ea1-b94a-ec1d7b3b1c4d&quot;
+    &quot;accountId&quot;: &quot;ec559142-a0a0-4892-a739-1e8e82a9fa5c&quot;
   }
 }</component>
   <component name="ProblemsViewState">
@@ -166,26 +186,28 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Android App.app.executor": "Run",
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
-    "RunOnceActivity.cidr.known.project.marker": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "RunOnceActivity.readMode.enableVisualFormatting": "true",
-    "cf.first.check.clang-format": "false",
-    "cidr.known.project.marker": "true",
-    "com.google.services.firebase.aqiPopupShown": "true",
-    "git-widget-placeholder": "main",
-    "kotlin-language-version-configured": "true",
-    "project.structure.last.edited": "Dependencies",
-    "project.structure.proportion": "0.17",
-    "project.structure.side.proportion": "0.2",
-    "settings.editor.selected.configurable": "advanced.settings"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Android App.app.executor&quot;: &quot;Run&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.cidr.known.project.marker&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.readMode.enableVisualFormatting&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;cf.first.check.clang-format&quot;: &quot;false&quot;,
+    &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
+    &quot;com.google.services.firebase.aqiPopupShown&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/proj/Gluc&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Dependencies&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.17&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;advanced.settings&quot;
   }
-}]]></component>
+}</component>
   <component name="PsdUISettings">
     <option name="LAST_EDITED_BUILD_TYPE" value="release" />
   </component>
@@ -335,6 +357,13 @@
       </method>
     </configuration>
   </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-python-sdk-1bde30d8e611-7b97d883f26b-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-252.25557.130" />
+      </set>
+    </attachedChunks>
+  </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
       <changelist id="e9d47b17-46be-4444-bfa9-1735b34eb0d8" name="Changes" comment="" />
@@ -476,12 +505,12 @@
       <map>
         <entry key="com.test.glucn">
           <value>
-            <CheckInfo lastCheckTimestamp="1784295878191" />
+            <CheckInfo lastCheckTimestamp="1784469756264" />
           </value>
         </entry>
         <entry key="com.test.glucn.test">
           <value>
-            <CheckInfo lastCheckTimestamp="1784295878191" />
+            <CheckInfo lastCheckTimestamp="1784469756266" />
           </value>
         </entry>
       </map>

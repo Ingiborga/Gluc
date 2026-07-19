@@ -16,16 +16,11 @@ import android.widget.Toast;
 
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
 import retrofit2.Call;
-import retrofit2.converter.gson.GsonConverterFactory;
-import retrofit2.http.Body;
-import retrofit2.http.GET;
-import retrofit2.http.POST;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.test.ServerConnector;
+import com.test.server_connector.ServerConnector;
 
 import com.test.R;
 import com.test.broadcast.BroadcastReceiver;
@@ -154,7 +149,7 @@ public class AuthActivity extends AppCompatActivity {
                             editor.putString("username", user_name.getText().toString());
                             editor.putString("lower_limit_glucose", "5");
                             editor.putString("upper_limit_glucose", "10");
-
+                            editor.putString("access_token", body.access_token);
                             editor.apply();
                             navigateToMain();
                         }

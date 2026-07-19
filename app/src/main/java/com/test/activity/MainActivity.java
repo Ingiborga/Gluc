@@ -1,5 +1,7 @@
 package com.test.activity;
 
+import static com.test.server_connector.ServerConnector.SendDataRequest;
+
 import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -20,9 +22,17 @@ import com.test.ble.BleDataCallback;
 import com.test.broadcast.BroadcastReceiver;
 import com.test.db.DBHelper;
 import com.test.db.DbTools;
+import com.test.server_connector.ServerConnector;
+
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
     private static final int PERMISSION_REQUEST_CODE = 100;
@@ -56,6 +66,10 @@ public class MainActivity extends AppCompatActivity {
             SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss", Locale.getDefault());
             timestampText.setText("Last update: " + sdf.format(new Date(timestamp)));
         }
+
+        editor.putInt("last_send_data_id", 0);
+        editor.apply();
+
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
         bottomNavigationView.setSelectedItemId(R.id.action_glucose);
 
@@ -83,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
             public void onGlucoseDataReceived(float glucoseValue, long timestamp) {
                 runOnUiThread(() -> updateGlucoseDisplay(glucoseValue, timestamp));
                 DbTools.add_data(glucoseValue,timestamp);
-            }
+                            }
             @Override
             public void onDeviceStatusChanged(String status) {
                 runOnUiThread(() -> {

@@ -2,6 +2,8 @@ package com.test.broadcast;
 
 import static android.content.Context.MODE_PRIVATE;
 
+import static com.test.server_connector.ServerConnector.SendDataRequest;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -10,6 +12,9 @@ import android.util.Log;
 import android.content.SharedPreferences;
 import com.test.db.DbTools;
 import com.test.ble.BleDataCallback;
+import com.test.server_connector.ServerConnector;
+
+import java.util.List;
 
 public class BroadcastReceiver extends android.content.BroadcastReceiver {
     private static final String TAG = "LibreReceiver";
@@ -69,4 +74,5 @@ public class BroadcastReceiver extends android.content.BroadcastReceiver {
             }
         }
     }
+
 }

@@ -1,10 +1,10 @@
-package com.test;
+package com.test.tools;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-public class DataHelp {
+public class DateHelp {
     public static String get_today_date(){
         String today = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
         return today;
