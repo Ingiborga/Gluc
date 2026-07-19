@@ -2,6 +2,7 @@ package com.test.activity;
 
 import android.Manifest;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -31,20 +32,30 @@ public class MainActivity extends AppCompatActivity {
     private TextView glucoseMgdlText;
     private TextView timestampText;
     private TextView statusText;
-
+    private SharedPreferences prefs;
+    private  SharedPreferences.Editor editor;
+    private void initPrefs() {
+        prefs = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+        editor = prefs.edit();
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        DBHelper dbHelper = new DBHelper(this);
-        DbTools.init(dbHelper);
-
         glucoseValueText = findViewById(R.id.glucoseValueText);//сюда приходит глюкоза
+        initPrefs();
+
         glucoseMgdlText = findViewById(R.id.glucoseMgdlText);//сюда приходит глюкоза в другом измерении
         timestampText = findViewById(R.id.timestampText);
         statusText = findViewById(R.id.statusText);
-
+        if (prefs.contains("last_glucose_timestamp")){
+            glucoseValueText.setText(String.format(Locale.US, "%.1f", prefs.getFloat("last_glucose_Mmoll", 0)));
+            glucoseMgdlText.setText(String.format(Locale.US, "%.0f mg/dL", prefs.getFloat("last_glucose_MgDl", 0)));
+            // Сохраняйте timestamp как long
+            long timestamp = prefs.getLong("timestamp", System.currentTimeMillis());
+            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss", Locale.getDefault());
+            timestampText.setText("Last update: " + sdf.format(new Date(timestamp)));
+        }
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
         bottomNavigationView.setSelectedItemId(R.id.action_glucose);
 

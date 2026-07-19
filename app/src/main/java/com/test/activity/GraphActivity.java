@@ -1,6 +1,7 @@
 package com.test.activity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteException;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -12,6 +13,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -19,10 +21,11 @@ import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.test.DataHelp;
 import com.test.GlucosePredictor;
 import com.test.R;
 import com.test.db.DbTools;
-
+import com.test.GraphHelper;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -35,17 +38,21 @@ public class GraphActivity extends AppCompatActivity {
     private TextView user_email;
     private TextView user_pass;
     private LineChart chartView;
-    private ArrayList<String> allLabels = new ArrayList<>();
+    private ArrayList<String> labels = new ArrayList<>();
     private boolean isPredictAdded = false;
-
+    private SharedPreferences prefs;
+    private void initPrefs() {
+        prefs = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_statistics);
+        initPrefs();
 
 // Инициализация графика
         chartView = findViewById(R.id.chart_view);
-        loadChartData();
+        create_statistics_graph(chartView);
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
         bottomNavigationView.setSelectedItemId(R.id.action_graph);
@@ -73,61 +80,29 @@ public class GraphActivity extends AppCompatActivity {
         }
     }
 
-    private void loadChartData() {
-        String today = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
-        List<Float> glucoseValues = new ArrayList<>();
-        List<String> timestamps = new ArrayList<>();
-        try{
-            Map<String, List<?>> data = DbTools.get_data(today, today);
-            glucoseValues = (List<Float>) data.get("glucose");
-            timestamps = new ArrayList<>();}
-        catch(SQLiteException e){
-            Log.e("GraphActivity", "Ошибка БД: " + e.getMessage());
+    public void create_statistics_graph(LineChart chartView){
+        Map<String, List<?>> datas=GraphHelper.loadChartData();
+        List<Entry> entries = (List<Entry>) datas.get("glucose");
+        labels = (ArrayList<String>) datas.get("dates");
 
-            glucoseValues.add(5.5f); timestamps.add("2026-07-14 16:45:00");
-            glucoseValues.add(6.2f); timestamps.add("2026-07-14 17:00:00");
-            glucoseValues.add(7.8f); timestamps.add("2026-07-14 17:15:00");
-            glucoseValues.add(8.0f); timestamps.add("2026-07-14 17:30:00");
-            glucoseValues.add(7.5f); timestamps.add("2026-07-14 17:45:00");
-            glucoseValues.add(6.2f); timestamps.add("2026-07-14 18:00:00");
-            glucoseValues.add(6.8f); timestamps.add("2026-07-14 18:15:00");
-            glucoseValues.add(6.0f); timestamps.add("2026-07-14 18:15:00");
-            glucoseValues.add(7.5f); timestamps.add("2026-07-14 18:30:00");
-            glucoseValues.add(7.8f);  timestamps.add("2026-07-14 18:45:00");
-        }
-        ArrayList<Entry> entries = new ArrayList<>();
-        for (int i = 0; i < glucoseValues.size(); i++) {
-            entries.add(new Entry(i, glucoseValues.get(i)));
-        }
-
-// Метки для оси X
-        ArrayList<String> labels = new ArrayList<>();
-        for (String timestamp : timestamps) {
-            labels.add(timestamp.substring(11, 16)); // "HH:mm"
-        }
-        allLabels.clear();
-        for (String timestamp : timestamps) {
-            allLabels.add(timestamp.substring(11, 16));
+        if (entries == null || entries.isEmpty()) {
+            Log.e("Activity", "No data to display");
+            return;
         }
         LineDataSet dataSet = new LineDataSet(entries, "Уровень глюкозы");
-        dataSet.setColor(0xFF2196F3);
-        dataSet.setCircleColor(0xFF2196F3);
-        dataSet.setLineWidth(2f);
-        dataSet.setCircleRadius(4f);
-        dataSet.setValueTextSize(12f);
-        dataSet.setValueTextColor(Color.GREEN);
 
-        chartView.getLegend().setTextColor(Color.GREEN);
-        chartView.getXAxis().setTextColor(Color.GREEN);
-        chartView.getAxisLeft().setTextColor(Color.GREEN);
-        chartView.setScaleEnabled(false);
-
+        GraphHelper.points_settings(dataSet);
         LineData lineData = new LineData(dataSet);
-        chartView.setData(lineData);
+        GraphHelper.Chart_settings(chartView,labels,lineData);
+        chartView.getAxisLeft().addLimitLine(GraphHelper.add_extr_graph(prefs.getString("lower_limit_glucose","4"), "Нижняя граница"));
+        chartView.getAxisLeft().addLimitLine(GraphHelper.add_extr_graph(prefs.getString("upper_limit_glucose","10"), "Верхняя граница"));
 
-        chartView.getXAxis().setValueFormatter(new IndexAxisValueFormatter(allLabels));
-        chartView.getXAxis().setGranularity(1f);
-        //chartView.getXAxis().setLabelCount(labels.size());
+        GraphHelper.set_size_x(chartView,entries);
+        GraphHelper.set_size_y(chartView,entries);
+        Log.d("Chart", "Labels size: " + labels.size());
+        Log.d("Chart", "Labels: " + labels.toString());
+        XAxis xAxis = chartView.getXAxis();
+        GraphHelper.bottom_label(xAxis,labels);
 
         chartView.invalidate();
     }
@@ -142,6 +117,7 @@ public class GraphActivity extends AppCompatActivity {
         if (isPredictAdded) {
             Intent intent = new Intent(this, GraphActivity.class);
             intent.putExtra("he_value", text); // Передаем значение ХЕ
+            Toast.makeText(this, "Попробуйте еще раз", Toast.LENGTH_SHORT).show();
             startActivity(intent);
             finish();
             return;
@@ -152,15 +128,16 @@ public class GraphActivity extends AppCompatActivity {
 
         try {
             float he_value = Float.parseFloat(text);
-            //float gluc_now = DbTools.current_glucose();
-            float gluc_now = 9.8f;
+            float gluc_now = prefs.getFloat("last_glucose_Mmoll", -1f);
             if (gluc_now <= 0) {
                 Toast.makeText(this, "Нет данных о текущей глюкозе", Toast.LENGTH_SHORT).show();
                 return;
             }
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            String timestamp = sdf.format(new Date());
-            Map<String, List<?>> data = GlucosePredictor.main(gluc_now, timestamp, he_value, 15);
+            String timestamp_now = DataHelp.current_time();
+            Map<String, List<?>> data = GlucosePredictor.main(gluc_now, timestamp_now, he_value, 15);
+            Log.d("GraphHelper", "predictGlucoseValues: " + data.get("glucose").size() + ", timestamps: " + data.get("dates").size());
+
             AddPredictGraph(data);
             List<Float> peak = (List<Float>) data.get("peak");
             GlucosePredictor.getAdvice(peak.get(0),this);
@@ -174,10 +151,10 @@ public class GraphActivity extends AppCompatActivity {
         }
     }
 
-    private void AddPredictGraph(Map<String, List<?>> data) {
+    private void AddPredictGraph(Map<String, List
+            <?>> data) {
         List<Float> predictValues = (List<Float>) data.get("glucose");
         List<String> predictDates = (List<String>) data.get("dates");
-
 
         if (predictValues == null || predictValues.isEmpty()) return;
 
@@ -187,8 +164,8 @@ public class GraphActivity extends AppCompatActivity {
         for (int i = 0; i < predictDates.size(); i++) {
             String time = predictDates.get(i);
             int minutes = Integer.parseInt(time.substring(14, 16));
-            if (minutes % 15 == 0 || i == predictDates.size() - 1) {
-                allLabels.add(time.substring(11, 16));
+            if (time != null && time.length() >= 16) {
+                labels.add(time.substring(11, 16));
             }
         }
 
@@ -211,18 +188,15 @@ public class GraphActivity extends AppCompatActivity {
         }
 
         LineDataSet predictSet = new LineDataSet(predictEntries, "Прогноз");
-        predictSet.setColor(0xFFFF0000);
-        predictSet.setCircleColor(0xFFFF0000);
-        predictSet.setValueTextColor(Color.GREEN);
-        predictSet.setValueTextSize(12f); // Размер в sp
+        GraphHelper.points_pred_settings(predictSet);
 
-        predictSet.setLineWidth(2f);
-        predictSet.enableDashedLine(10f, 5f, 0f);
-        predictSet.setDrawValues(true);
         dataSets.add(predictSet);
 
+        float maxX = lastX + predictValues.size();
+        chartView.getXAxis().setAxisMaximum(maxX);
+
         // Устанавливаем обновленные метки
-        chartView.getXAxis().setValueFormatter(new IndexAxisValueFormatter(allLabels));
+        chartView.getXAxis().setValueFormatter(new IndexAxisValueFormatter(labels));
         chartView.getXAxis().setGranularity(1f);
         //chartView.getXAxis().setLabelCount(Math.min(allLabels.size(), 15));
         chartView.getAxisRight().setEnabled(false);

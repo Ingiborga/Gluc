@@ -15,8 +15,11 @@ public class DBHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         Log.d(LOG_TAG, "--- onCreate database ---");
         // создаем таблицу с полями
-        db.execSQL("create table glucose_values ("+ "id integer primary key autoincrement,"
-                + "glucose float,"+ "day timestamp"+ ");");
+        db.execSQL("CREATE TABLE glucose_values (" +
+                "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "glucose REAL, " +
+                "timestamp INTEGER UNIQUE" +
+                ");");
     }
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {

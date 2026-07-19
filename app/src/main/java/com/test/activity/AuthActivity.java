@@ -30,6 +30,8 @@ import com.test.ServerConnector;
 import com.test.R;
 import com.test.broadcast.BroadcastReceiver;
 import com.test.broadcast.BroadcastService;
+import com.test.db.DBHelper;
+import com.test.db.DbTools;
 
 import java.io.IOException;
 
@@ -44,7 +46,9 @@ public class AuthActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         initPrefs();
+        DBHelper dbHelper = new DBHelper(this);
 
+        DbTools.init(dbHelper);
         libreReceiver = new BroadcastReceiver();
         IntentFilter filter = new IntentFilter();
         filter.addAction("com.librelink.app.ThirdPartyIntegration.GLUCOSE_READING");

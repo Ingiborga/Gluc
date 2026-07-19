@@ -7,13 +7,15 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
-
+import android.content.SharedPreferences;
+import com.test.db.DbTools;
 import com.test.ble.BleDataCallback;
 
 public class BroadcastReceiver extends android.content.BroadcastReceiver {
     private static final String TAG = "LibreReceiver";
     private static BleDataCallback callback;
-
+    private SharedPreferences prefs;
+    private  SharedPreferences.Editor editor;
     private String ACTION_GLUCOSE;
 
     public static void setCallback(BleDataCallback cb) {
@@ -21,7 +23,8 @@ public class BroadcastReceiver extends android.content.BroadcastReceiver {
         Log.d(TAG, "Callback set");
     }
     private void init_glucometer(Context context){
-        SharedPreferences prefs = context.getSharedPreferences("MyPrefs", MODE_PRIVATE);
+        prefs = context.getSharedPreferences("MyPrefs", MODE_PRIVATE);
+        editor = prefs.edit();
         String sensorType = prefs.getString("glucometer", "aidex");
         Log.d(TAG, "BroadcastService registered for "+sensorType);
 
@@ -30,12 +33,14 @@ public class BroadcastReceiver extends android.content.BroadcastReceiver {
         } else {
             ACTION_GLUCOSE = "com.librelink.app.ThirdPartyIntegration.GLUCOSE_READING";
         }
+
     }
 
     @Override
     public void onReceive(Context context, Intent intent) {
         String action = intent.getAction();
         init_glucometer(context);
+
         if (ACTION_GLUCOSE.equals(action)) {
             Bundle bundle = intent.getExtras();
             if (bundle == null) {
@@ -48,11 +53,15 @@ public class BroadcastReceiver extends android.content.BroadcastReceiver {
 
             double glucoseMgDl = bundle.getDouble("glucose", -1);
             long timestamp = bundle.getLong("timestamp", System.currentTimeMillis());
-
+            editor.putFloat("last_glucose_MgDl", (float) glucoseMgDl);
+            editor.putFloat("last_glucose_timestamp", (float) timestamp);
+            editor.apply();
             Log.d(TAG, "Glucose (mg/dL): " + glucoseMgDl);
-
             if (glucoseMgDl > 0 && callback != null) {
                 float glucoseMmolL = (float) (glucoseMgDl / 18.0);
+                DbTools.add_data((float)glucoseMmolL, timestamp);
+                editor.putFloat("last_glucose_Mmoll", glucoseMmolL);
+                editor.apply();
                 callback.onGlucoseDataReceived(glucoseMmolL, timestamp);
                 callback.onDeviceStatusChanged(String.format("Libre: %.1f mmol/L", glucoseMmolL));
             } else if (glucoseMgDl <= 0 && callback != null) {

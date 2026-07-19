@@ -83,15 +83,21 @@ public class ProfileActivity extends AppCompatActivity {
         switch(text) {
             case "Ottai":
                 editor.putString("glucometer", "ottai");
+                editor.apply();
                 break;
             case "Aidex":
                 editor.putString("glucometer", "aidex");
+                editor.apply();
                 break;
         }
     }
     public void ApplySettings(View view){
-        editor.putString("lower_limit_glucose", String.valueOf(lower_limit_glucose.getText()));
-        editor.putString("upper_limit_glucose", String.valueOf(upper_limit_glucose.getText()));
+        if (String.valueOf(lower_limit_glucose.getText())!=""){
+            editor.putString("lower_limit_glucose", String.valueOf(lower_limit_glucose.getText()));
+        }
+        if (String.valueOf(upper_limit_glucose.getText())!=""){
+            editor.putString("upper_limit_glucose", String.valueOf(upper_limit_glucose.getText()));
+        }
         editor.apply();
     }
     public void LogoutAcc(View view){
