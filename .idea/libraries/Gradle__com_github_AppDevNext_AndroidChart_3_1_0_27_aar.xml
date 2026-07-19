@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="Gradle: com.github.AppDevNext:AndroidChart:3.1.0.27@aar" external-system-id="GRADLE">
+    <CLASSES>
+      <root url="file://$USER_HOME$/.gradle/caches/8.9/transforms/b8190575ad11d388d0c6864fc977c737/transformed/jetified-AndroidChart-3.1.0.27/AndroidManifest.xml" />
+      <root url="jar://$USER_HOME$/.gradle/caches/8.9/transforms/b8190575ad11d388d0c6864fc977c737/transformed/jetified-AndroidChart-3.1.0.27/jars/classes.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

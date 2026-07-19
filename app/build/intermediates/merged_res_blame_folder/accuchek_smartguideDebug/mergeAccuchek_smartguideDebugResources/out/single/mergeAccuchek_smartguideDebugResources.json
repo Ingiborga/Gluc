@@ -1,0 +1,54 @@
+[
+    {
+        "merged": "com.test.app-accuchek_smartguideDebug-46:/layout_activity_account.xml.flat",
+        "source": "com.test.app-main-50:/layout/activity_account.xml"
+    },
+    {
+        "merged": "com.test.app-accuchek_smartguideDebug-46:/drawable_ic_graph.xml.flat",
+        "source": "com.test.app-main-50:/drawable/ic_graph.xml"
+    },
+    {
+        "merged": "com.test.app-accuchek_smartguideDebug-46:/layout_activity_main.xml.flat",
+        "source": "com.test.app-main-50:/layout/activity_main.xml"
+    },
+    {
+        "merged": "com.test.app-accuchek_smartguideDebug-46:/drawable_radio_text_selector.xml.flat",
+        "source": "com.test.app-main-50:/drawable/radio_text_selector.xml"
+    },
+    {
+        "merged": "com.test.app-accuchek_smartguideDebug-46:/drawable_radio_button_selector.xml.flat",
+        "source": "com.test.app-main-50:/drawable/radio_button_selector.xml"
+    },
+    {
+        "merged": "com.test.app-accuchek_smartguideDebug-46:/menu_bottom_menu.xml.flat",
+        "source": "com.test.app-main-50:/menu/bottom_menu.xml"
+    },
+    {
+        "merged": "com.test.app-accuchek_smartguideDebug-46:/drawable_edit_text_border.xml.flat",
+        "source": "com.test.app-main-50:/drawable/edit_text_border.xml"
+    },
+    {
+        "merged": "com.test.app-accuchek_smartguideDebug-46:/drawable_ic_profile.xml.flat",
+        "source": "com.test.app-main-50:/drawable/ic_profile.xml"
+    },
+    {
+        "merged": "com.test.app-accuchek_smartguideDebug-46:/layout_activity_statistics.xml.flat",
+        "source": "com.test.app-main-50:/layout/activity_statistics.xml"
+    },
+    {
+        "merged": "com.test.app-accuchek_smartguideDebug-46:/drawable_edit_text_border_graph.xml.flat",
+        "source": "com.test.app-main-50:/drawable/edit_text_border_graph.xml"
+    },
+    {
+        "merged": "com.test.app-accuchek_smartguideDebug-46:/drawable_ic_glucose.xml.flat",
+        "source": "com.test.app-main-50:/drawable/ic_glucose.xml"
+    },
+    {
+        "merged": "com.test.app-accuchek_smartguideDebug-46:/drawable_edit_text_border_accent.xml.flat",
+        "source": "com.test.app-main-50:/drawable/edit_text_border_accent.xml"
+    },
+    {
+        "merged": "com.test.app-accuchek_smartguideDebug-46:/layout_activity_login.xml.flat",
+        "source": "com.test.app-main-50:/layout/activity_login.xml"
+    }
+]

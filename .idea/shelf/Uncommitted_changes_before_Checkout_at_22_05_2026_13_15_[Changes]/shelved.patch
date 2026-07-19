@@ -1,0 +1,579 @@
+Index: app/src/main/res/layout/activity_statistics.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<<LinearLayout\r\nxmlns:android=\"http://schemas.android.com/apk/res/android\"\r\nandroid:layout_width=\"match_parent\"\r\nandroid:layout_height=\"match_parent\"\r\nandroid:orientation=\"vertical\">\r\n\r\n<!-- Периоды статистики -->\r\n<LinearLayout\r\n    android:layout_width=\"wrap_content\"\r\n    android:layout_height=\"wrap_content\"\r\n    android:orientation=\"horizontal\"\r\n    android:layout_gravity=\"center_horizontal\"\r\n    android:layout_marginTop=\"8dp\"\r\n    android:layout_marginBottom=\"8dp\">\r\n\r\n    <Button\r\n        android:id=\"@+id/button_stats_today\"\r\n        android:layout_width=\"wrap_content\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:text=\"Сегодня\"\r\n        android:textSize=\"12sp\" />\r\n\r\n    <Button\r\n        android:id=\"@+id/button_stats_yesterday\"\r\n        android:layout_width=\"wrap_content\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:text=\"Вчера\"\r\n        android:textSize=\"12sp\" />\r\n\r\n    <Button\r\n        android:id=\"@+id/button_stats_7d\"\r\n        android:layout_width=\"wrap_content\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:text=\"7д\"\r\n        android:textSize=\"12sp\" />\r\n\r\n    <Button\r\n        android:id=\"@+id/button_stats_30d\"\r\n        android:layout_width=\"wrap_content\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:text=\"30д\"\r\n        android:textSize=\"12sp\" />\r\n\r\n    <Button\r\n        android:id=\"@+id/button_stats_90d\"\r\n        android:layout_width=\"wrap_content\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:text=\"90д\"\r\n        android:textSize=\"12sp\" />\r\n</LinearLayout>\r\n\r\n<!-- Индикаторы -->\r\n<LinearLayout\r\n    android:id=\"@+id/indicator_layout\"\r\n    android:layout_width=\"wrap_content\"\r\n    android:layout_height=\"wrap_content\"\r\n    android:orientation=\"horizontal\"\r\n    android:layout_gravity=\"center_horizontal\" />\r\n\r\n<!-- ViewPager для графиков статистики -->\r\n<androidx.viewpager.widget.ViewPager\r\n    android:id=\"@+id/pager\"\r\n    android:layout_width=\"match_parent\"\r\n    android:layout_height=\"match_parent\" />\r\n\r\n</LinearLayout>
+===================================================================
+diff --git a/app/src/main/res/layout/activity_statistics.xml b/app/src/main/res/layout/activity_statistics.xml
+--- a/app/src/main/res/layout/activity_statistics.xml	(revision c4f77f67585e0909c86069ddecae1f8ee7542d2a)
++++ b/app/src/main/res/layout/activity_statistics.xml	(date 1779434750525)
+@@ -1,5 +1,5 @@
+ <?xml version="1.0" encoding="utf-8"?>
+-<<LinearLayout
++<LinearLayout
+ xmlns:android="http://schemas.android.com/apk/res/android"
+ android:layout_width="match_parent"
+ android:layout_height="match_parent"
+Index: app/src/main/res/layout/activity_calibration_graph.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<<LinearLayout\r\nxmlns:android=\"http://schemas.android.com/apk/res/android\"\r\nandroid:layout_width=\"match_parent\"\r\nandroid:layout_height=\"match_parent\"\r\nandroid:orientation=\"vertical\"\r\nandroid:background=\"#212121\">\r\n\r\n<TextView\r\n    android:layout_width=\"wrap_content\"\r\n    android:layout_height=\"wrap_content\"\r\n    android:text=\"Калибровка сенсора\"\r\n    android:textSize=\"20sp\"\r\n    android:textStyle=\"bold\"\r\n    android:textColor=\"@android:color/white\"\r\n    android:layout_margin=\"16dp\" />\r\n\r\n<com.github.mikephil.charting.charts.ScatterChart\r\n    android:id=\"@+id/calibrationChart\"\r\n    android:layout_width=\"match_parent\"\r\n    android:layout_height=\"0dp\"\r\n    android:layout_weight=\"1\"\r\n    android:layout_margin=\"16dp\" />\r\n\r\n<LinearLayout\r\n    android:layout_width=\"match_parent\"\r\n    android:layout_height=\"wrap_content\"\r\n    android:orientation=\"horizontal\"\r\n    android:padding=\"16dp\">\r\n\r\n    <com.google.android.material.textfield.TextInputLayout\r\n        android:layout_width=\"0dp\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:layout_weight=\"1\"\r\n        android:hint=\"Значение глюкометра (мг/дл)\"\r\n        style=\"@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox\">\r\n\r\n        <com.google.android.material.textfield.TextInputEditText\r\n            android:id=\"@+id/etCalibrationValue\"\r\n            android:layout_width=\"match_parent\"\r\n            android:layout_height=\"wrap_content\"\r\n            android:inputType=\"numberDecimal\"\r\n            android:textColor=\"@android:color/white\" />\r\n    </com.google.android.material.textfield.TextInputLayout>\r\n\r\n    <Button\r\n        android:id=\"@+id/btnAddCalibration\"\r\n        android:layout_width=\"wrap_content\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:text=\"Добавить\"\r\n        android:layout_marginStart=\"16dp\" />\r\n</LinearLayout>\r\n\r\n</LinearLayout>
+===================================================================
+diff --git a/app/src/main/res/layout/activity_calibration_graph.xml b/app/src/main/res/layout/activity_calibration_graph.xml
+--- a/app/src/main/res/layout/activity_calibration_graph.xml	(revision c4f77f67585e0909c86069ddecae1f8ee7542d2a)
++++ b/app/src/main/res/layout/activity_calibration_graph.xml	(date 1779435824967)
+@@ -1,54 +1,56 @@
+ <?xml version="1.0" encoding="utf-8"?>
+-<<LinearLayout
+-xmlns:android="http://schemas.android.com/apk/res/android"
+-android:layout_width="match_parent"
+-android:layout_height="match_parent"
+-android:orientation="vertical"
+-android:background="#212121">
++<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
++    xmlns:tools="http://schemas.android.com/tools"
++    android:layout_width="match_parent"
++    android:layout_height="match_parent"
++    android:orientation="vertical"
++    android:background="#212121"
++    tools:ignore="MissingClass">
+ 
+-<TextView
+-    android:layout_width="wrap_content"
+-    android:layout_height="wrap_content"
+-    android:text="Калибровка сенсора"
+-    android:textSize="20sp"
+-    android:textStyle="bold"
+-    android:textColor="@android:color/white"
+-    android:layout_margin="16dp" />
++    <TextView
++        android:layout_width="wrap_content"
++        android:layout_height="wrap_content"
++        android:text="Калибровка сенсора"
++        android:textSize="20sp"
++        android:textStyle="bold"
++        android:textColor="@android:color/white"
++        android:layout_margin="16dp" />
+ 
+-<com.github.mikephil.charting.charts.ScatterChart
+-    android:id="@+id/calibrationChart"
+-    android:layout_width="match_parent"
+-    android:layout_height="0dp"
+-    android:layout_weight="1"
+-    android:layout_margin="16dp" />
++    <com.github.mikephil.charting.charts.ScatterChart
++        android:id="@+id/calibrationChart"
++        android:layout_width="match_parent"
++        android:layout_height="0dp"
++        android:layout_weight="1"
++        android:layout_margin="16dp" />
+ 
+-<LinearLayout
+-    android:layout_width="match_parent"
+-    android:layout_height="wrap_content"
+-    android:orientation="horizontal"
+-    android:padding="16dp">
++    <LinearLayout
++        android:layout_width="match_parent"
++        android:layout_height="wrap_content"
++        android:orientation="horizontal"
++        android:padding="16dp">
+ 
+-    <com.google.android.material.textfield.TextInputLayout
+-        android:layout_width="0dp"
+-        android:layout_height="wrap_content"
+-        android:layout_weight="1"
+-        android:hint="Значение глюкометра (мг/дл)"
+-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
++        <com.google.android.material.textfield.TextInputLayout
++            android:layout_width="0dp"
++            android:layout_height="wrap_content"
++            android:layout_weight="1"
++            android:hint="Значение глюкометра (мг/дл)"
++            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
++            android:hintTextColor="#888888">
+ 
+-        <com.google.android.material.textfield.TextInputEditText
+-            android:id="@+id/etCalibrationValue"
+-            android:layout_width="match_parent"
+-            android:layout_height="wrap_content"
+-            android:inputType="numberDecimal"
+-            android:textColor="@android:color/white" />
+-    </com.google.android.material.textfield.TextInputLayout>
++            <com.google.android.material.textfield.TextInputEditText
++                android:id="@+id/etCalibrationValue"
++                android:layout_width="match_parent"
++                android:layout_height="wrap_content"
++                android:inputType="numberDecimal"
++                android:textColor="@android:color/white" />
++        </com.google.android.material.textfield.TextInputLayout>
+ 
+-    <Button
+-        android:id="@+id/btnAddCalibration"
+-        android:layout_width="wrap_content"
+-        android:layout_height="wrap_content"
+-        android:text="Добавить"
+-        android:layout_marginStart="16dp" />
+-</LinearLayout>
++        <Button
++            android:id="@+id/btnAddCalibration"
++            android:layout_width="wrap_content"
++            android:layout_height="wrap_content"
++            android:text="Добавить"
++            android:layout_marginStart="16dp" />
++    </LinearLayout>
+ 
+ </LinearLayout>
+\ No newline at end of file
+Index: app/src/main/res/layout/fragment_sensor.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<androidx.constraintlayout.widget.ConstraintLayout xmlns:android=\"http://schemas.android.com/apk/res/android\"\r\n    <?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<<androidx.drawerlayout.widget.DrawerLayout\r\nxmlns:android=\"http://schemas.android.com/apk/res/android\"\r\nxmlns:app=\"http://schemas.android.com/apk/res-auto\"\r\nandroid:id=\"@+id/drawer_layout\"\r\nandroid:layout_width=\"match_parent\"\r\nandroid:layout_height=\"match_parent\"\r\nandroid:background=\"#212121\">\r\n\r\n<LinearLayout\r\n    android:layout_width=\"match_parent\"\r\n    android:layout_height=\"match_parent\"\r\n    android:orientation=\"vertical\">\r\n\r\n    <!-- Toolbar -->\r\n    <androidx.appcompat.widget.Toolbar\r\n        android:id=\"@+id/toolbar\"\r\n        android:layout_width=\"match_parent\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:background=\"?attr/colorPrimary\"\r\n        android:minHeight=\"?attr/actionBarSize\" />\r\n\r\n    <!-- График глюкозы (как в xDrip) -->\r\n    <com.github.mikephil.charting.charts.LineChart\r\n        android:id=\"@+id/chart\"\r\n        android:layout_width=\"match_parent\"\r\n        android:layout_height=\"0dp\"\r\n        android:layout_weight=\"1\"\r\n        android:layout_marginTop=\"8dp\" />\r\n\r\n    <!-- Текущее значение крупным шрифтом -->\r\n    <LinearLayout\r\n        android:layout_width=\"wrap_content\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:orientation=\"horizontal\"\r\n        android:layout_gravity=\"end\"\r\n        android:layout_marginEnd=\"20dp\"\r\n        android:layout_marginBottom=\"4dp\">\r\n\r\n        <TextView\r\n            android:id=\"@+id/currentBgValueRealTime\"\r\n            android:layout_width=\"wrap_content\"\r\n            android:layout_height=\"wrap_content\"\r\n            android:text=\"--.-\"\r\n            android:textSize=\"50sp\"\r\n            android:textStyle=\"bold\"\r\n            android:textColor=\"@android:color/white\" />\r\n\r\n        <ImageView\r\n            android:id=\"@+id/trendArrow\"\r\n            android:layout_width=\"wrap_content\"\r\n            android:layout_height=\"wrap_content\"\r\n            android:layout_marginStart=\"10dp\"\r\n            android:layout_marginTop=\"18dp\"\r\n            android:src=\"@drawable/ic_arrow_forward_color_24dp\" />\r\n    </LinearLayout>\r\n\r\n    <!-- Статусная строка -->\r\n    <TextView\r\n        android:id=\"@+id/extraStatusLine\"\r\n        android:layout_width=\"wrap_content\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:layout_marginStart=\"10dp\"\r\n        android:text=\"Статус сенсора\"\r\n        android:textAppearance=\"?android:attr/textAppearanceSmall\"\r\n        android:shadowColor=\"#ff212121\"\r\n        android:shadowDx=\"0\"\r\n        android:shadowDy=\"0\"\r\n        android:shadowRadius=\"14\" />\r\n\r\n    <!-- Прогноз низкого сахара -->\r\n    <TextView\r\n        android:id=\"@+id/lowpredict\"\r\n        android:layout_width=\"match_parent\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:layout_marginStart=\"35dp\"\r\n        android:layout_marginEnd=\"30dp\"\r\n        android:text=\"Прогноз: стабильно\"\r\n        android:textColor=\"#C30909\"\r\n        android:textStyle=\"bold\"\r\n        android:shadowColor=\"#ff212121\"\r\n        android:shadowDx=\"0\"\r\n        android:shadowDy=\"0\"\r\n        android:shadowRadius=\"14\" />\r\n\r\n    <!-- Панель быстрых действий -->\r\n    <LinearLayout\r\n        android:layout_width=\"match_parent\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:orientation=\"horizontal\"\r\n        android:gravity=\"center\"\r\n        android:padding=\"8dp\">\r\n\r\n        <ImageButton\r\n            android:id=\"@+id/btnTreatment\"\r\n            android:layout_width=\"wrap_content\"\r\n            android:layout_height=\"wrap_content\"\r\n            android:background=\"@android:color/transparent\"\r\n            android:src=\"@drawable/ic_eyedropper_variant_grey600_24dp\"\r\n            android:contentDescription=\"Лечение\" />\r\n\r\n        <ImageButton\r\n            android:id=\"@+id/btnNote\"\r\n            android:layout_width=\"wrap_content\"\r\n            android:layout_height=\"wrap_content\"\r\n            android:background=\"@android:color/transparent\"\r\n            android:src=\"@drawable/ic_note_plus_grey600_24dp\"\r\n            android:contentDescription=\"Заметка\" />\r\n\r\n        <ImageButton\r\n            android:id=\"@+id/btnBloodTest\"\r\n            android:layout_width=\"wrap_content\"\r\n            android:layout_height=\"wrap_content\"\r\n            android:background=\"@android:color/transparent\"\r\n            android:src=\"@drawable/ic_touch_app_white_48dp\"\r\n            android:contentDescription=\"Калибровка\" />\r\n\r\n        <ImageButton\r\n            android:id=\"@+id/btnCarbs\"\r\n            android:layout_width=\"wrap_content\"\r\n            android:layout_height=\"wrap_content\"\r\n            android:background=\"@android:color/transparent\"\r\n            android:src=\"@drawable/ic_local_dining_white_48dp\"\r\n            android:contentDescription=\"Углеводы\" />\r\n    </LinearLayout>\r\n\r\n    <!-- Данные лечения -->\r\n    <LinearLayout\r\n        android:layout_width=\"match_parent\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:orientation=\"horizontal\"\r\n        android:padding=\"8dp\">\r\n\r\n        <TextView\r\n            android:id=\"@+id/textBloodGlucose\"\r\n            android:layout_width=\"0dp\"\r\n            android:layout_height=\"wrap_content\"\r\n            android:layout_weight=\"1\"\r\n            android:text=\"-- мг/дл\"\r\n            android:textColor=\"@android:color/holo_green_light\"\r\n            android:textSize=\"22sp\"\r\n            android:textStyle=\"bold\" />\r\n\r\n        <TextView\r\n            android:id=\"@+id/textCarbohydrate\"\r\n            android:layout_width=\"0dp\"\r\n            android:layout_height=\"wrap_content\"\r\n            android:layout_weight=\"1\"\r\n            android:text=\"-- грамм\"\r\n            android:textColor=\"@android:color/holo_green_light\"\r\n            android:textSize=\"22dp\"\r\n            android:textStyle=\"bold\" />\r\n\r\n        <TextView\r\n            android:id=\"@+id/textInsulinSumUnits\"\r\n            android:layout_width=\"0dp\"\r\n            android:layout_height=\"wrap_content\"\r\n            android:layout_weight=\"1\"\r\n            android:text=\"-- ед.\"\r\n            android:textColor=\"@android:color/holo_green_light\"\r\n            android:textSize=\"22dp\"\r\n            android:textStyle=\"bold\" />\r\n    </LinearLayout>\r\n\r\n    <!-- Кнопки управления сенсором -->\r\n    <LinearLayout\r\n        android:layout_width=\"match_parent\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:orientation=\"horizontal\"\r\n        android:gravity=\"center\"\r\n        android:padding=\"8dp\">\r\n\r\n        <Button\r\n            android:id=\"@+id/btnStartMonitoring\"\r\n            android:layout_width=\"wrap_content\"\r\n            android:layout_height=\"wrap_content\"\r\n            android:text=\"Старт\"\r\n            android:drawableTop=\"@drawable/ic_heart_pulse_grey600_24dp\" />\r\n\r\n        <Button\r\n            android:id=\"@+id/btnStopMonitoring\"\r\n            android:layout_width=\"wrap_content\"\r\n            android:layout_height=\"wrap_content\"\r\n            android:text=\"Стоп\"\r\n            android:drawableTop=\"@drawable/ic_walk_grey600_24dp\" />\r\n    </LinearLayout>\r\n\r\n    <!-- Nano статус -->\r\n    <LinearLayout\r\n        android:id=\"@+id/nanoStatus\"\r\n        android:layout_width=\"wrap_content\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:orientation=\"horizontal\"\r\n        android:layout_gravity=\"center_horizontal\"\r\n        android:visibility=\"gone\">\r\n\r\n        <TextView\r\n            android:id=\"@+id/nanoStatusText\"\r\n            android:layout_width=\"wrap_content\"\r\n            android:layout_height=\"wrap_content\"\r\n            android:layout_marginStart=\"5dp\"\r\n            android:layout_marginTop=\"2dp\"\r\n            android:text=\"Nano Status\" />\r\n\r\n        <TextView\r\n            android:id=\"@+id/ExpireStatusText\"\r\n            android:layout_width=\"wrap_content\"\r\n            android:layout_height=\"wrap_content\"\r\n            android:layout_marginStart=\"5dp\"\r\n            android:layout_marginTop=\"2dp\"\r\n            android:layout_marginEnd=\"5dp\"\r\n            android:text=\"Expiry Status\" />\r\n    </LinearLayout>\r\n\r\n</LinearLayout>\r\n\r\n<!-- Navigation Drawer -->\r\n<com.google.android.material.navigation.NavigationView\r\n    android:id=\"@+id/nav_view\"\r\n    android:layout_width=\"wrap_content\"\r\n    android:layout_height=\"match_parent\"\r\n    android:layout_gravity=\"start\"\r\n    app:menu=\"@menu/drawer_menu\" />\r\n\r\n</androidx.drawerlayout.widget.DrawerLayout>\r\n</androidx.constraintlayout.widget.ConstraintLayout>
+===================================================================
+diff --git a/app/src/main/res/layout/fragment_sensor.xml b/app/src/main/res/layout/fragment_sensor.xml
+--- a/app/src/main/res/layout/fragment_sensor.xml	(revision c4f77f67585e0909c86069ddecae1f8ee7542d2a)
++++ b/app/src/main/res/layout/fragment_sensor.xml	(date 1779435573555)
+@@ -1,228 +1,226 @@
+ <?xml version="1.0" encoding="utf-8"?>
+-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+-    <?xml version="1.0" encoding="utf-8"?>
+-<<androidx.drawerlayout.widget.DrawerLayout
+-xmlns:android="http://schemas.android.com/apk/res/android"
+-xmlns:app="http://schemas.android.com/apk/res-auto"
+-android:id="@+id/drawer_layout"
+-android:layout_width="match_parent"
+-android:layout_height="match_parent"
+-android:background="#212121">
++<androidx.drawerlayout.widget.DrawerLayout
++    xmlns:android="http://schemas.android.com/apk/res/android"
++    xmlns:app="http://schemas.android.com/apk/res-auto"
++    android:id="@+id/drawer_layout"
++    android:layout_width="match_parent"
++    android:layout_height="match_parent"
++    android:background="#212121">
+ 
+-<LinearLayout
+-    android:layout_width="match_parent"
+-    android:layout_height="match_parent"
+-    android:orientation="vertical">
++    <!-- Основной контент -->
++    <LinearLayout
++        android:layout_width="match_parent"
++        android:layout_height="match_parent"
++        android:orientation="vertical">
+ 
+-    <!-- Toolbar -->
+-    <androidx.appcompat.widget.Toolbar
+-        android:id="@+id/toolbar"
+-        android:layout_width="match_parent"
+-        android:layout_height="wrap_content"
+-        android:background="?attr/colorPrimary"
+-        android:minHeight="?attr/actionBarSize" />
++        <!-- Toolbar -->
++        <androidx.appcompat.widget.Toolbar
++            android:id="@+id/toolbar"
++            android:layout_width="match_parent"
++            android:layout_height="wrap_content"
++            android:background="?attr/colorPrimary"
++            android:minHeight="?attr/actionBarSize" />
+ 
+-    <!-- График глюкозы (как в xDrip) -->
+-    <com.github.mikephil.charting.charts.LineChart
+-        android:id="@+id/chart"
+-        android:layout_width="match_parent"
+-        android:layout_height="0dp"
+-        android:layout_weight="1"
+-        android:layout_marginTop="8dp" />
++        <!-- График глюкозы (как в xDrip) -->
++        <com.github.mikephil.charting.charts.LineChart
++            android:id="@+id/chart"
++            android:layout_width="match_parent"
++            android:layout_height="0dp"
++            android:layout_weight="1"
++            android:layout_marginTop="8dp" />
+ 
+-    <!-- Текущее значение крупным шрифтом -->
+-    <LinearLayout
+-        android:layout_width="wrap_content"
+-        android:layout_height="wrap_content"
+-        android:orientation="horizontal"
+-        android:layout_gravity="end"
+-        android:layout_marginEnd="20dp"
+-        android:layout_marginBottom="4dp">
++        <!-- Текущее значение крупным шрифтом -->
++        <LinearLayout
++            android:layout_width="wrap_content"
++            android:layout_height="wrap_content"
++            android:orientation="horizontal"
++            android:layout_gravity="end"
++            android:layout_marginEnd="20dp"
++            android:layout_marginBottom="4dp">
+ 
+-        <TextView
+-            android:id="@+id/currentBgValueRealTime"
+-            android:layout_width="wrap_content"
+-            android:layout_height="wrap_content"
+-            android:text="--.-"
+-            android:textSize="50sp"
+-            android:textStyle="bold"
+-            android:textColor="@android:color/white" />
++            <TextView
++                android:id="@+id/currentBgValueRealTime"
++                android:layout_width="wrap_content"
++                android:layout_height="wrap_content"
++                android:text="--.-"
++                android:textSize="50sp"
++                android:textStyle="bold"
++                android:textColor="@android:color/white" />
+ 
+-        <ImageView
+-            android:id="@+id/trendArrow"
+-            android:layout_width="wrap_content"
+-            android:layout_height="wrap_content"
+-            android:layout_marginStart="10dp"
+-            android:layout_marginTop="18dp"
+-            android:src="@drawable/ic_arrow_forward_color_24dp" />
+-    </LinearLayout>
++            <ImageView
++                android:id="@+id/trendArrow"
++                android:layout_width="wrap_content"
++                android:layout_height="wrap_content"
++                android:layout_marginStart="10dp"
++                android:layout_marginTop="18dp"
++                android:src="@drawable/ic_arrow_forward_color_24dp" />
++        </LinearLayout>
+ 
+-    <!-- Статусная строка -->
+-    <TextView
+-        android:id="@+id/extraStatusLine"
+-        android:layout_width="wrap_content"
+-        android:layout_height="wrap_content"
+-        android:layout_marginStart="10dp"
+-        android:text="Статус сенсора"
+-        android:textAppearance="?android:attr/textAppearanceSmall"
+-        android:shadowColor="#ff212121"
+-        android:shadowDx="0"
+-        android:shadowDy="0"
+-        android:shadowRadius="14" />
++        <!-- Статусная строка -->
++        <TextView
++            android:id="@+id/extraStatusLine"
++            android:layout_width="wrap_content"
++            android:layout_height="wrap_content"
++            android:layout_marginStart="10dp"
++            android:text="Статус сенсора"
++            android:textAppearance="?android:attr/textAppearanceSmall"
++            android:shadowColor="#ff212121"
++            android:shadowDx="0"
++            android:shadowDy="0"
++            android:shadowRadius="14" />
+ 
+-    <!-- Прогноз низкого сахара -->
+-    <TextView
+-        android:id="@+id/lowpredict"
+-        android:layout_width="match_parent"
+-        android:layout_height="wrap_content"
+-        android:layout_marginStart="35dp"
+-        android:layout_marginEnd="30dp"
+-        android:text="Прогноз: стабильно"
+-        android:textColor="#C30909"
+-        android:textStyle="bold"
+-        android:shadowColor="#ff212121"
+-        android:shadowDx="0"
+-        android:shadowDy="0"
+-        android:shadowRadius="14" />
++        <!-- Прогноз низкого сахара -->
++        <TextView
++            android:id="@+id/lowpredict"
++            android:layout_width="match_parent"
++            android:layout_height="wrap_content"
++            android:layout_marginStart="35dp"
++            android:layout_marginEnd="30dp"
++            android:text="Прогноз: стабильно"
++            android:textColor="#C30909"
++            android:textStyle="bold"
++            android:shadowColor="#ff212121"
++            android:shadowDx="0"
++            android:shadowDy="0"
++            android:shadowRadius="14" />
+ 
+-    <!-- Панель быстрых действий -->
+-    <LinearLayout
+-        android:layout_width="match_parent"
+-        android:layout_height="wrap_content"
+-        android:orientation="horizontal"
+-        android:gravity="center"
+-        android:padding="8dp">
++        <!-- Панель быстрых действий -->
++        <LinearLayout
++            android:layout_width="match_parent"
++            android:layout_height="wrap_content"
++            android:orientation="horizontal"
++            android:gravity="center"
++            android:padding="8dp">
+ 
+-        <ImageButton
+-            android:id="@+id/btnTreatment"
+-            android:layout_width="wrap_content"
+-            android:layout_height="wrap_content"
+-            android:background="@android:color/transparent"
+-            android:src="@drawable/ic_eyedropper_variant_grey600_24dp"
+-            android:contentDescription="Лечение" />
++            <ImageButton
++                android:id="@+id/btnTreatment"
++                android:layout_width="wrap_content"
++                android:layout_height="wrap_content"
++                android:background="@android:color/transparent"
++                android:src="@drawable/ic_eyedropper_variant_grey600_24dp"
++                android:contentDescription="Лечение" />
+ 
+-        <ImageButton
+-            android:id="@+id/btnNote"
+-            android:layout_width="wrap_content"
+-            android:layout_height="wrap_content"
+-            android:background="@android:color/transparent"
+-            android:src="@drawable/ic_note_plus_grey600_24dp"
+-            android:contentDescription="Заметка" />
++            <ImageButton
++                android:id="@+id/btnNote"
++                android:layout_width="wrap_content"
++                android:layout_height="wrap_content"
++                android:background="@android:color/transparent"
++                android:src="@drawable/ic_note_plus_grey600_24dp"
++                android:contentDescription="Заметка" />
+ 
+-        <ImageButton
+-            android:id="@+id/btnBloodTest"
+-            android:layout_width="wrap_content"
+-            android:layout_height="wrap_content"
+-            android:background="@android:color/transparent"
+-            android:src="@drawable/ic_touch_app_white_48dp"
+-            android:contentDescription="Калибровка" />
++            <ImageButton
++                android:id="@+id/btnBloodTest"
++                android:layout_width="wrap_content"
++                android:layout_height="wrap_content"
++                android:background="@android:color/transparent"
++                android:src="@drawable/ic_touch_app_white_48dp"
++                android:contentDescription="Калибровка" />
+ 
+-        <ImageButton
+-            android:id="@+id/btnCarbs"
+-            android:layout_width="wrap_content"
+-            android:layout_height="wrap_content"
+-            android:background="@android:color/transparent"
+-            android:src="@drawable/ic_local_dining_white_48dp"
+-            android:contentDescription="Углеводы" />
+-    </LinearLayout>
++            <ImageButton
++                android:id="@+id/btnCarbs"
++                android:layout_width="wrap_content"
++                android:layout_height="wrap_content"
++                android:background="@android:color/transparent"
++                android:src="@drawable/ic_local_dining_white_48dp"
++                android:contentDescription="Углеводы" />
++        </LinearLayout>
+ 
+-    <!-- Данные лечения -->
+-    <LinearLayout
+-        android:layout_width="match_parent"
+-        android:layout_height="wrap_content"
+-        android:orientation="horizontal"
+-        android:padding="8dp">
++        <!-- Данные лечения -->
++        <LinearLayout
++            android:layout_width="match_parent"
++            android:layout_height="wrap_content"
++            android:orientation="horizontal"
++            android:padding="8dp">
+ 
+-        <TextView
+-            android:id="@+id/textBloodGlucose"
+-            android:layout_width="0dp"
+-            android:layout_height="wrap_content"
+-            android:layout_weight="1"
+-            android:text="-- мг/дл"
+-            android:textColor="@android:color/holo_green_light"
+-            android:textSize="22sp"
+-            android:textStyle="bold" />
++            <TextView
++                android:id="@+id/textBloodGlucose"
++                android:layout_width="0dp"
++                android:layout_height="wrap_content"
++                android:layout_weight="1"
++                android:text="-- мг/дл"
++                android:textColor="@android:color/holo_green_light"
++                android:textSize="22sp"
++                android:textStyle="bold" />
+ 
+-        <TextView
+-            android:id="@+id/textCarbohydrate"
+-            android:layout_width="0dp"
+-            android:layout_height="wrap_content"
+-            android:layout_weight="1"
+-            android:text="-- грамм"
+-            android:textColor="@android:color/holo_green_light"
+-            android:textSize="22dp"
+-            android:textStyle="bold" />
++            <TextView
++                android:id="@+id/textCarbohydrate"
++                android:layout_width="0dp"
++                android:layout_height="wrap_content"
++                android:layout_weight="1"
++                android:text="-- грамм"
++                android:textColor="@android:color/holo_green_light"
++                android:textSize="22sp"
++                android:textStyle="bold" />
+ 
+-        <TextView
+-            android:id="@+id/textInsulinSumUnits"
+-            android:layout_width="0dp"
+-            android:layout_height="wrap_content"
+-            android:layout_weight="1"
+-            android:text="-- ед."
+-            android:textColor="@android:color/holo_green_light"
+-            android:textSize="22dp"
+-            android:textStyle="bold" />
+-    </LinearLayout>
++            <TextView
++                android:id="@+id/textInsulinSumUnits"
++                android:layout_width="0dp"
++                android:layout_height="wrap_content"
++                android:layout_weight="1"
++                android:text="-- ед."
++                android:textColor="@android:color/holo_green_light"
++                android:textSize="22sp"
++                android:textStyle="bold" />
++        </LinearLayout>
+ 
+-    <!-- Кнопки управления сенсором -->
+-    <LinearLayout
+-        android:layout_width="match_parent"
+-        android:layout_height="wrap_content"
+-        android:orientation="horizontal"
+-        android:gravity="center"
+-        android:padding="8dp">
++        <!-- Кнопки управления сенсором -->
++        <LinearLayout
++            android:layout_width="match_parent"
++            android:layout_height="wrap_content"
++            android:orientation="horizontal"
++            android:gravity="center"
++            android:padding="8dp">
+ 
+-        <Button
+-            android:id="@+id/btnStartMonitoring"
+-            android:layout_width="wrap_content"
+-            android:layout_height="wrap_content"
+-            android:text="Старт"
+-            android:drawableTop="@drawable/ic_heart_pulse_grey600_24dp" />
++            <Button
++                android:id="@+id/btnStartMonitoring"
++                android:layout_width="wrap_content"
++                android:layout_height="wrap_content"
++                android:text="Старт"
++                android:drawableTop="@drawable/ic_heart_pulse_grey600_24dp" />
+ 
+-        <Button
+-            android:id="@+id/btnStopMonitoring"
+-            android:layout_width="wrap_content"
+-            android:layout_height="wrap_content"
+-            android:text="Стоп"
+-            android:drawableTop="@drawable/ic_walk_grey600_24dp" />
+-    </LinearLayout>
++            <Button
++                android:id="@+id/btnStopMonitoring"
++                android:layout_width="wrap_content"
++                android:layout_height="wrap_content"
++                android:text="Стоп"
++                android:drawableTop="@drawable/ic_walk_grey600_24dp" />
++        </LinearLayout>
+ 
+-    <!-- Nano статус -->
+-    <LinearLayout
+-        android:id="@+id/nanoStatus"
+-        android:layout_width="wrap_content"
+-        android:layout_height="wrap_content"
+-        android:orientation="horizontal"
+-        android:layout_gravity="center_horizontal"
+-        android:visibility="gone">
++        <!-- Nano статус -->
++        <LinearLayout
++            android:id="@+id/nanoStatus"
++            android:layout_width="wrap_content"
++            android:layout_height="wrap_content"
++            android:orientation="horizontal"
++            android:layout_gravity="center_horizontal"
++            android:visibility="gone">
+ 
+-        <TextView
+-            android:id="@+id/nanoStatusText"
+-            android:layout_width="wrap_content"
+-            android:layout_height="wrap_content"
+-            android:layout_marginStart="5dp"
+-            android:layout_marginTop="2dp"
+-            android:text="Nano Status" />
++            <TextView
++                android:id="@+id/nanoStatusText"
++                android:layout_width="wrap_content"
++                android:layout_height="wrap_content"
++                android:layout_marginStart="5dp"
++                android:layout_marginTop="2dp"
++                android:text="Nano Status" />
+ 
+-        <TextView
+-            android:id="@+id/ExpireStatusText"
+-            android:layout_width="wrap_content"
+-            android:layout_height="wrap_content"
+-            android:layout_marginStart="5dp"
+-            android:layout_marginTop="2dp"
+-            android:layout_marginEnd="5dp"
+-            android:text="Expiry Status" />
+-    </LinearLayout>
++            <TextView
++                android:id="@+id/ExpireStatusText"
++                android:layout_width="wrap_content"
++                android:layout_height="wrap_content"
++                android:layout_marginStart="5dp"
++                android:layout_marginTop="2dp"
++                android:layout_marginEnd="5dp"
++                android:text="Expiry Status" />
++        </LinearLayout>
+ 
+-</LinearLayout>
++    </LinearLayout>
+ 
+-<!-- Navigation Drawer -->
+-<com.google.android.material.navigation.NavigationView
+-    android:id="@+id/nav_view"
+-    android:layout_width="wrap_content"
+-    android:layout_height="match_parent"
+-    android:layout_gravity="start"
+-    app:menu="@menu/drawer_menu" />
++    <!-- Navigation Drawer -->
++    <com.google.android.material.navigation.NavigationView
++        android:id="@+id/nav_view"
++        android:layout_width="wrap_content"
++        android:layout_height="match_parent"
++        android:layout_gravity="start"
++        app:menu="@menu/drawer_menu" />
+ 
+-</androidx.drawerlayout.widget.DrawerLayout>
+-</androidx.constraintlayout.widget.ConstraintLayout>
+\ No newline at end of file
++</androidx.drawerlayout.widget.DrawerLayout>
+\ No newline at end of file
+Index: app/src/main/res/layout/fragment_account.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<<androidx.drawerlayout.widget.DrawerLayout\r\nxmlns:android=\"http://schemas.android.com/apk/res/android\"\r\nxmlns:app=\"http://schemas.android.com/apk/res-auto\"\r\nandroid:id=\"@+id/drawer_layout\"\r\nandroid:layout_width=\"match_parent\"\r\nandroid:layout_height=\"match_parent\"\r\nandroid:background=\"#212121\">\r\n\r\n<LinearLayout\r\n    android:layout_width=\"match_parent\"\r\n    android:layout_height=\"match_parent\"\r\n    android:orientation=\"vertical\">\r\n\r\n    <!-- Toolbar -->\r\n    <androidx.appcompat.widget.Toolbar\r\n        android:id=\"@+id/toolbar\"\r\n        android:layout_width=\"match_parent\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:background=\"?attr/colorPrimary\"\r\n        android:minHeight=\"?attr/actionBarSize\" />\r\n\r\n    <!-- График глюкозы (как в xDrip) -->\r\n    <com.github.mikephil.charting.charts.LineChart\r\n        android:id=\"@+id/chart\"\r\n        android:layout_width=\"match_parent\"\r\n        android:layout_height=\"0dp\"\r\n        android:layout_weight=\"1\"\r\n        android:layout_marginTop=\"8dp\" />\r\n\r\n    <!-- Текущее значение крупным шрифтом -->\r\n    <LinearLayout\r\n        android:layout_width=\"wrap_content\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:orientation=\"horizontal\"\r\n        android:layout_gravity=\"end\"\r\n        android:layout_marginEnd=\"20dp\"\r\n        android:layout_marginBottom=\"4dp\">\r\n\r\n        <TextView\r\n            android:id=\"@+id/currentBgValueRealTime\"\r\n            android:layout_width=\"wrap_content\"\r\n            android:layout_height=\"wrap_content\"\r\n            android:text=\"--.-\"\r\n            android:textSize=\"50sp\"\r\n            android:textStyle=\"bold\"\r\n            android:textColor=\"@android:color/white\" />\r\n\r\n        <ImageView\r\n            android:id=\"@+id/trendArrow\"\r\n            android:layout_width=\"wrap_content\"\r\n            android:layout_height=\"wrap_content\"\r\n            android:layout_marginStart=\"10dp\"\r\n            android:layout_marginTop=\"18dp\"\r\n            android:src=\"@drawable/ic_arrow_forward_color_24dp\" />\r\n    </LinearLayout>\r\n\r\n    <!-- Статусная строка -->\r\n    <TextView\r\n        android:id=\"@+id/extraStatusLine\"\r\n        android:layout_width=\"wrap_content\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:layout_marginStart=\"10dp\"\r\n        android:text=\"Статус сенсора\"\r\n        android:textAppearance=\"?android:attr/textAppearanceSmall\"\r\n        android:shadowColor=\"#ff212121\"\r\n        android:shadowDx=\"0\"\r\n        android:shadowDy=\"0\"\r\n        android:shadowRadius=\"14\" />\r\n\r\n    <!-- Прогноз низкого сахара -->\r\n    <TextView\r\n        android:id=\"@+id/lowpredict\"\r\n        android:layout_width=\"match_parent\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:layout_marginStart=\"35dp\"\r\n        android:layout_marginEnd=\"30dp\"\r\n        android:text=\"Прогноз: стабильно\"\r\n        android:textColor=\"#C30909\"\r\n        android:textStyle=\"bold\"\r\n        android:shadowColor=\"#ff212121\"\r\n        android:shadowDx=\"0\"\r\n        android:shadowDy=\"0\"\r\n        android:shadowRadius=\"14\" />\r\n\r\n    <!-- Панель быстрых действий -->\r\n    <LinearLayout\r\n        android:layout_width=\"match_parent\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:orientation=\"horizontal\"\r\n        android:gravity=\"center\"\r\n        android:padding=\"8dp\">\r\n\r\n        <ImageButton\r\n            android:id=\"@+id/btnTreatment\"\r\n            android:layout_width=\"wrap_content\"\r\n            android:layout_height=\"wrap_content\"\r\n            android:background=\"@android:color/transparent\"\r\n            android:src=\"@drawable/ic_eyedropper_variant_grey600_24dp\"\r\n            android:contentDescription=\"Лечение\" />\r\n\r\n        <ImageButton\r\n            android:id=\"@+id/btnNote\"\r\n            android:layout_width=\"wrap_content\"\r\n            android:layout_height=\"wrap_content\"\r\n            android:background=\"@android:color/transparent\"\r\n            android:src=\"@drawable/ic_note_plus_grey600_24dp\"\r\n            android:contentDescription=\"Заметка\" />\r\n\r\n        <ImageButton\r\n            android:id=\"@+id/btnBloodTest\"\r\n            android:layout_width=\"wrap_content\"\r\n            android:layout_height=\"wrap_content\"\r\n            android:background=\"@android:color/transparent\"\r\n            android:src=\"@drawable/ic_touch_app_white_48dp\"\r\n            android:contentDescription=\"Калибровка\" />\r\n\r\n        <ImageButton\r\n            android:id=\"@+id/btnCarbs\"\r\n            android:layout_width=\"wrap_content\"\r\n            android:layout_height=\"wrap_content\"\r\n            android:background=\"@android:color/transparent\"\r\n            android:src=\"@drawable/ic_local_dining_white_48dp\"\r\n            android:contentDescription=\"Углеводы\" />\r\n    </LinearLayout>\r\n\r\n    <!-- Данные лечения -->\r\n    <LinearLayout\r\n        android:layout_width=\"match_parent\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:orientation=\"horizontal\"\r\n        android:padding=\"8dp\">\r\n\r\n        <TextView\r\n            android:id=\"@+id/textBloodGlucose\"\r\n            android:layout_width=\"0dp\"\r\n            android:layout_height=\"wrap_content\"\r\n            android:layout_weight=\"1\"\r\n            android:text=\"-- мг/дл\"\r\n            android:textColor=\"@android:color/holo_green_light\"\r\n            android:textSize=\"22sp\"\r\n            android:textStyle=\"bold\" />\r\n\r\n        <TextView\r\n            android:id=\"@+id/textCarbohydrate\"\r\n            android:layout_width=\"0dp\"\r\n            android:layout_height=\"wrap_content\"\r\n            android:layout_weight=\"1\"\r\n            android:text=\"-- грамм\"\r\n            android:textColor=\"@android:color/holo_green_light\"\r\n            android:textSize=\"22dp\"\r\n            android:textStyle=\"bold\" />\r\n\r\n        <TextView\r\n            android:id=\"@+id/textInsulinSumUnits\"\r\n            android:layout_width=\"0dp\"\r\n            android:layout_height=\"wrap_content\"\r\n            android:layout_weight=\"1\"\r\n            android:text=\"-- ед.\"\r\n            android:textColor=\"@android:color/holo_green_light\"\r\n            android:textSize=\"22dp\"\r\n            android:textStyle=\"bold\" />\r\n    </LinearLayout>\r\n\r\n    <!-- Кнопки управления сенсором -->\r\n    <LinearLayout\r\n        android:layout_width=\"match_parent\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:orientation=\"horizontal\"\r\n        android:gravity=\"center\"\r\n        android:padding=\"8dp\">\r\n\r\n        <Button\r\n            android:id=\"@+id/btnStartMonitoring\"\r\n            android:layout_width=\"wrap_content\"\r\n            android:layout_height=\"wrap_content\"\r\n            android:text=\"Старт\"\r\n            android:drawableTop=\"@drawable/ic_heart_pulse_grey600_24dp\" />\r\n\r\n        <Button\r\n            android:id=\"@+id/btnStopMonitoring\"\r\n            android:layout_width=\"wrap_content\"\r\n            android:layout_height=\"wrap_content\"\r\n            android:text=\"Стоп\"\r\n            android:drawableTop=\"@drawable/ic_walk_grey600_24dp\" />\r\n    </LinearLayout>\r\n\r\n    <!-- Nano статус -->\r\n    <LinearLayout\r\n        android:id=\"@+id/nanoStatus\"\r\n        android:layout_width=\"wrap_content\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:orientation=\"horizontal\"\r\n        android:layout_gravity=\"center_horizontal\"\r\n        android:visibility=\"gone\">\r\n\r\n        <TextView\r\n            android:id=\"@+id/nanoStatusText\"\r\n            android:layout_width=\"wrap_content\"\r\n            android:layout_height=\"wrap_content\"\r\n            android:layout_marginStart=\"5dp\"\r\n            android:layout_marginTop=\"2dp\"\r\n            android:text=\"Nano Status\" />\r\n\r\n        <TextView\r\n            android:id=\"@+id/ExpireStatusText\"\r\n            android:layout_width=\"wrap_content\"\r\n            android:layout_height=\"wrap_content\"\r\n            android:layout_marginStart=\"5dp\"\r\n            android:layout_marginTop=\"2dp\"\r\n            android:layout_marginEnd=\"5dp\"\r\n            android:text=\"Expiry Status\" />\r\n    </LinearLayout>\r\n\r\n</LinearLayout>\r\n\r\n<!-- Navigation Drawer -->\r\n<com.google.android.material.navigation.NavigationView\r\n    android:id=\"@+id/nav_view\"\r\n    android:layout_width=\"wrap_content\"\r\n    android:layout_height=\"match_parent\"\r\n    android:layout_gravity=\"start\"\r\n    app:menu=\"@menu/drawer_menu\" />\r\n\r\n</androidx.drawerlayout.widget.DrawerLayout>
+===================================================================
+diff --git a/app/src/main/res/layout/fragment_account.xml b/app/src/main/res/layout/fragment_account.xml
+--- a/app/src/main/res/layout/fragment_account.xml	(revision c4f77f67585e0909c86069ddecae1f8ee7542d2a)
++++ b/app/src/main/res/layout/fragment_account.xml	(date 1779434750535)
+@@ -1,5 +1,5 @@
+ <?xml version="1.0" encoding="utf-8"?>
+-<<androidx.drawerlayout.widget.DrawerLayout
++<androidx.drawerlayout.widget.DrawerLayout
+ xmlns:android="http://schemas.android.com/apk/res/android"
+ xmlns:app="http://schemas.android.com/apk/res-auto"
+ android:id="@+id/drawer_layout"

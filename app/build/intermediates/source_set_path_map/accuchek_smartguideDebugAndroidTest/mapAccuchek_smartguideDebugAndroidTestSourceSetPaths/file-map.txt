@@ -1,0 +1,4 @@
+com.test.test.app-accuchek_smartguide-0 D:\proj\Gluc\app\build\generated\res\resValues\androidTest\accuchek_smartguide\debug
+com.test.test.app-mergeAccuchek_smartguideDebugAndroidTestResources-1 D:\proj\Gluc\app\build\intermediates\incremental\accuchek_smartguideDebugAndroidTest\mergeAccuchek_smartguideDebugAndroidTestResources\merged.dir
+com.test.test.app-mergeAccuchek_smartguideDebugAndroidTestResources-2 D:\proj\Gluc\app\build\intermediates\incremental\accuchek_smartguideDebugAndroidTest\mergeAccuchek_smartguideDebugAndroidTestResources\stripped.dir
+com.test.test.app-accuchek_smartguideDebugAndroidTest-3 D:\proj\Gluc\app\build\intermediates\merged_res\accuchek_smartguideDebugAndroidTest\mergeAccuchek_smartguideDebugAndroidTestResources

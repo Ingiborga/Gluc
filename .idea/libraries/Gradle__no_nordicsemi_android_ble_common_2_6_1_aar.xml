@@ -1,0 +1,15 @@
+<component name="libraryTable">
+  <library name="Gradle: no.nordicsemi.android:ble-common:2.6.1@aar" external-system-id="GRADLE">
+    <ANNOTATIONS>
+      <root url="jar://$USER_HOME$/.gradle/caches/8.9/transforms/5f94737ccaebd2a2a69f6f8e07288faf/transformed/jetified-ble-common-2.6.1/annotations.zip!/" />
+    </ANNOTATIONS>
+    <CLASSES>
+      <root url="file://$USER_HOME$/.gradle/caches/8.9/transforms/5f94737ccaebd2a2a69f6f8e07288faf/transformed/jetified-ble-common-2.6.1/AndroidManifest.xml" />
+      <root url="jar://$USER_HOME$/.gradle/caches/8.9/transforms/5f94737ccaebd2a2a69f6f8e07288faf/transformed/jetified-ble-common-2.6.1/jars/classes.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/no.nordicsemi.android/ble-common/2.6.1/90fd09973347bf2e784bbc6696e4546b2c9e3f12/ble-common-2.6.1-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

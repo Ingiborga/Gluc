@@ -1,0 +1,4 @@
+#Thu Jul 16 22:00:51 MSK 2026
+base.0=D\:\\proj\\Gluc\\app\\build\\intermediates\\dex\\accuchek_smartguideDebugAndroidTest\\mergeProjectDexAccuchek_smartguideDebugAndroidTest\\0\\classes.dex
+path.0=0/classes.dex
+renamed.0=classes.dex
