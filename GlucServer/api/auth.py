@@ -9,21 +9,21 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 
-from GlucServer.DB.session import get_db
-from GlucServer.api.dependencies import get_current_user
-from GlucServer.security.hashing import (
+from DB.session import get_db
+from api.dependencies import get_current_user
+from security.hashing import (
     hash_password,
     verify_password,
     needs_rehash,
 )
-from GlucServer.security.tokens import (
+from security.tokens import (
     create_token_pair,
     verify_refresh_token,
     create_access_token,
     create_refresh_token,
 )
-from GlucServer.DB.models import User
-from GlucServer.schemas.auth import (
+from DB.models import User
+from schemas.auth import (
     UserRegisterRequest,
     UserLoginRequest,
     TokenResponse,

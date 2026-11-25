@@ -19,7 +19,7 @@ class User(Base):
     __tablename__ = "users"
     id = sa.Column(sa.Integer, primary_key=True, index=True, autoincrement=True)
     email = sa.Column(sa.String(255), unique=True, nullable=False, index=True)
-    password_hash = sa.Column(sa.String(255), nullable=False)
+    password_hash = sa.Column(sa.String, nullable=False)
     name = sa.Column(sa.String(100), nullable=False)
     phone = sa.Column(sa.String(20), unique=True, nullable=True)
     min_threshold = sa.Column(sa.Float)

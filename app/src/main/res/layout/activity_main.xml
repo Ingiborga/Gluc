@@ -37,16 +37,6 @@
             android:textStyle="bold"
             android:layout_marginBottom="10dp"
             android:textColor="@color/accent_color"/>
-
-        <TextView
-            android:id="@+id/glucoseMgdlText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="--- mg/dL"
-            android:textSize="16sp"
-            android:textColor="@color/accent_color"
-            android:layout_marginBottom="20dp"/>
-
         <TextView
             android:id="@+id/timestampText"
             android:layout_width="wrap_content"

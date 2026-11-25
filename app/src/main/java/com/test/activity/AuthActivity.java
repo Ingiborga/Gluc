@@ -20,6 +20,8 @@ import retrofit2.Call;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.test.ble.BleDataCallback;
+import com.test.ble.GlucoseSimulator;
 import com.test.server_connector.ServerConnector;
 
 import com.test.R;
@@ -33,7 +35,7 @@ import java.io.IOException;
 public class AuthActivity extends AppCompatActivity {
 
     private SharedPreferences prefs;
-    private BroadcastReceiver libreReceiver;
+    //private BroadcastReceiver libreReceiver;
 
     private  SharedPreferences.Editor editor;
     @Override
@@ -44,7 +46,7 @@ public class AuthActivity extends AppCompatActivity {
         DBHelper dbHelper = new DBHelper(this);
 
         DbTools.init(dbHelper);
-        libreReceiver = new BroadcastReceiver();
+        /*libreReceiver = new BroadcastReceiver();
         IntentFilter filter = new IntentFilter();
         filter.addAction("com.librelink.app.ThirdPartyIntegration.GLUCOSE_READING");
 
@@ -53,7 +55,7 @@ public class AuthActivity extends AppCompatActivity {
         } else {
             registerReceiver(libreReceiver, filter);
         }
-
+*/
         Intent serviceIntent = new Intent(this, BroadcastService.class);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             startForegroundService(serviceIntent);
@@ -182,6 +184,13 @@ public class AuthActivity extends AppCompatActivity {
                         Toast.makeText(AuthActivity.this, "Ошибка клиента", Toast.LENGTH_SHORT).show();
                     }
                 });
+                editor.putString("email", user_email.getText().toString());
+                editor.putString("password", user_pass.getText().toString());
+                editor.putString("username", user_name.getText().toString());
+                editor.putString("lower_limit_glucose", "5");
+                editor.putString("upper_limit_glucose", "10");
+                editor.apply();
+                navigateToMain();
                 break;
             case "Вход":
                 ServerConnector.LoginRequest(mailtext, passtext, new Callback<ServerConnector.ResponseMessage>() {
@@ -230,8 +239,16 @@ public class AuthActivity extends AppCompatActivity {
                         Log.d("ServerConnector", "Запрос не получен");
                         Log.d("ServerConnector", String.valueOf(t.getMessage()));
                         Toast.makeText(AuthActivity.this, "Ошибка клиента", Toast.LENGTH_SHORT).show();
+
                     }
                 });
+                editor.putString("email", user_email.getText().toString());
+                editor.putString("password", user_pass.getText().toString());
+                editor.putString("username", user_name.getText().toString());
+                editor.putString("lower_limit_glucose", "5");
+                editor.putString("upper_limit_glucose", "10");
+                editor.apply();
+                navigateToMain();
                 break;
             default:
                 Toast.makeText(this, "Выберите действие", Toast.LENGTH_SHORT).show();

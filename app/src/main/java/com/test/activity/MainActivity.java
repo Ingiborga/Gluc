@@ -19,6 +19,7 @@ import androidx.core.content.ContextCompat;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.test.R;
 import com.test.ble.BleDataCallback;
+import com.test.ble.GlucoseSimulator;
 import com.test.broadcast.BroadcastReceiver;
 import com.test.db.DBHelper;
 import com.test.db.DbTools;
@@ -37,9 +38,8 @@ import retrofit2.Response;
 public class MainActivity extends AppCompatActivity {
     private static final int PERMISSION_REQUEST_CODE = 100;
 
-    private BroadcastReceiver libreReceiver;
+    //private BroadcastReceiver libreReceiver;
     private TextView glucoseValueText;
-    private TextView glucoseMgdlText;
     private TextView timestampText;
     private TextView statusText;
     private SharedPreferences prefs;
@@ -55,13 +55,10 @@ public class MainActivity extends AppCompatActivity {
         glucoseValueText = findViewById(R.id.glucoseValueText);//сюда приходит глюкоза
         initPrefs();
 
-        glucoseMgdlText = findViewById(R.id.glucoseMgdlText);//сюда приходит глюкоза в другом измерении
         timestampText = findViewById(R.id.timestampText);
         statusText = findViewById(R.id.statusText);
         if (prefs.contains("last_glucose_timestamp")){
             glucoseValueText.setText(String.format(Locale.US, "%.1f", prefs.getFloat("last_glucose_Mmoll", 0)));
-            glucoseMgdlText.setText(String.format(Locale.US, "%.0f mg/dL", prefs.getFloat("last_glucose_MgDl", 0)));
-            // Сохраняйте timestamp как long
             long timestamp = prefs.getLong("timestamp", System.currentTimeMillis());
             SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss", Locale.getDefault());
             timestampText.setText("Last update: " + sdf.format(new Date(timestamp)));
@@ -92,35 +89,22 @@ public class MainActivity extends AppCompatActivity {
             }
             return false;
         });
-        BroadcastReceiver.setCallback(new BleDataCallback() {//сюда приходит значение глюкозы
+        GlucoseSimulator.start(getApplicationContext(), new BleDataCallback() {
             @Override
             public void onGlucoseDataReceived(float glucoseValue, long timestamp) {
+                // Данные уже сохранены в БД внутри GlucoseAlarmReceiver
                 runOnUiThread(() -> updateGlucoseDisplay(glucoseValue, timestamp));
-                DbTools.add_data(glucoseValue,timestamp);
-                            }
+            }
+
             @Override
             public void onDeviceStatusChanged(String status) {
                 runOnUiThread(() -> {
-                    if (statusText != null) {
-                        statusText.setText("Status: " + status);
-                    }
-                    Log.d("MainActivity", "Status: " + status);
+                    if (statusText != null) statusText.setText("Status: " + status);
                 });
             }
-            @Override
-            public void onError(String error) {
-                runOnUiThread(() -> {
-                    Toast.makeText(MainActivity.this, "Error: " + error, Toast.LENGTH_LONG).show();
-                    if (statusText != null) {
-                        statusText.setText("Status: ERROR - " + error);
-                    }
-                    Log.e("MainActivity", "Error: " + error);
-                });
-            }
-            @Override
-            public void onDeviceFound(String deviceName, String deviceAddress, int rssi) {
-                Log.d("MainActivity", "Device found: " + deviceName + " [" + deviceAddress + "] RSSI: " + rssi);
-            }
+
+            @Override public void onError(String error) { }
+            @Override public void onDeviceFound(String n, String a, int r) { }
         });
         checkPermissions();
 
@@ -128,10 +112,6 @@ public class MainActivity extends AppCompatActivity {
     private void updateGlucoseDisplay(float glucoseMmolL, long timestamp) {//в окошечки приходят значения клюкозы
         if (glucoseValueText != null) {
             glucoseValueText.setText(String.format(Locale.US, "%.1f", glucoseMmolL));
-        }
-        if (glucoseMgdlText != null) {
-            float glucoseMgDl = glucoseMmolL * 18.0f;
-            glucoseMgdlText.setText(String.format(Locale.US, "%.0f mg/dL", glucoseMgDl));
         }
         if (timestampText != null) {
             SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss", Locale.getDefault());
@@ -146,9 +126,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        if (libreReceiver != null) {
-            unregisterReceiver(libreReceiver);
-        }
     }
 
     @Override

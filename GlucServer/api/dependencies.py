@@ -4,9 +4,9 @@ from fastapi import Depends, Header, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 
-from GlucServer.DB import get_db
-from GlucServer.security.tokens import verify_access_token
-from GlucServer.DB.models import User
+from DB import get_db
+from security.tokens import verify_access_token
+from DB.models import User
 
 
 async def get_current_user(

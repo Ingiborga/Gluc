@@ -5,8 +5,8 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 
-from GlucServer.DB import init_db
-from GlucServer.api import auth, glucose
+from DB import init_db
+from api import auth, glucose
 
 with open(Path(__file__).parent / "config.json", "r", encoding="utf-8") as file:
     CONFIG = json.load(file)
@@ -58,3 +58,4 @@ async def root():
 async def health_check():
     """Проверка здоровья сервера"""
     return {"status": "healthy"}
+# uvicorn main:app --host 0.0.0.0 --port 8001

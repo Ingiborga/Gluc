@@ -11,10 +11,10 @@ from sqlalchemy import select, func, and_, desc
 from datetime import datetime, timedelta
 from typing import Optional
 
-from GlucServer.DB.session import get_db
-from GlucServer.api.dependencies import get_current_user
-from GlucServer.DB.models import User, Device, GlucoseMeasurement
-from GlucServer.schemas.glucose import (
+from DB.session import get_db
+from api.dependencies import get_current_user
+from DB.models import User, Device, GlucoseMeasurement
+from schemas.glucose import (
     GlucoseDataRequest,
     GlucoseSubmissionResponse,
     GlucoseStatsRequest,
